@@ -1,0 +1,170 @@
+[
+  {
+    "id": "P001",
+    "nombre": "Cuaderno Personalizado",
+    "categoria": "Personalizados",
+    "precio": 2000,
+    "stock": 11,
+    "imagen": "img/cuaderno_personalizado.png",
+    "imagenes": [
+    "img/sakura-1.jpg",
+    "img/sakura-2.jpg",
+    "img/sakura-3.jpg"
+    ],
+    "descripcion": "Cuaderno artesanal con diseño inspirado en Sakura Card Captor. Ideal para notas, diarios o uso escolar.",
+    "variaciones": [
+    {
+      "id": "rosa",
+      "nombre": "Rosa",
+      "imagen": "img/sakura-rosa.jpg",
+      "stock": 5
+    },
+    {
+      "id": "celeste",
+      "nombre": "Celeste",
+      "imagen": "img/sakura-celeste.jpg",
+      "stock": 5
+    }
+    ]
+  },
+  {
+    "id": "P002",
+    "nombre": "Charm Personalizado",
+    "categoria": "Personalizados",
+    "precio": 1500,
+    "stock": 10,
+    "imagen": "img/charm_personalizado.png",
+    "imagenes": [
+    "img/sakura-1.jpg",
+    "img/sakura-2.jpg",
+    "img/sakura-3.jpg"
+    ],
+    "descripcion": "Cuaderno artesanal con diseño inspirado en Sakura Card Captor. Ideal para notas, diarios o uso escolar.",
+    "variaciones": [
+    {
+      "id": "rosa",
+      "nombre": "Rosa",
+      "imagen": "img/sakura-rosa.jpg",
+      "stock": 5
+    },
+    {
+      "id": "celeste",
+      "nombre": "Celeste",
+      "imagen": "img/sakura-celeste.jpg",
+      "stock": 5
+    }
+    ]
+  },
+  {
+    "id": "P003",
+    "nombre": "Llavero Personalizado",
+    "categoria": "Personalizados",
+    "precio": 2000,
+    "stock": 11,
+    "imagen": "img/llavero_personalizado.png",
+    "imagenes": [
+    "img/sakura-1.jpg",
+    "img/sakura-2.jpg",
+    "img/sakura-3.jpg"
+    ],
+    "descripcion": "Cuaderno artesanal con diseño inspirado en Sakura Card Captor. Ideal para notas, diarios o uso escolar.",
+    "variaciones": [
+    {
+      "id": "rosa",
+      "nombre": "Rosa",
+      "imagen": "img/sakura-rosa.jpg",
+      "stock": 5
+    },
+    {
+      "id": "celeste",
+      "nombre": "Celeste",
+      "imagen": "img/sakura-celeste.jpg",
+      "stock": 5
+    }
+    ]
+  },
+  {
+    "id": "P004",
+    "nombre": "Standee Personalizado",
+    "categoria": "Personalizados",
+    "precio": 1500,
+    "stock": 10,
+    "imagen": "img/standee_personalizado.jpeg",
+    "imagenes": [
+    "img/sakura-1.jpg",
+    "img/sakura-2.jpg",
+    "img/sakura-3.jpg"
+    ],
+    "descripcion": "Cuaderno artesanal con diseño inspirado en Sakura Card Captor. Ideal para notas, diarios o uso escolar.",
+    "variaciones": [
+    {
+      "id": "rosa",
+      "nombre": "Rosa",
+      "imagen": "img/sakura-rosa.jpg",
+      "stock": 5
+    },
+    {
+      "id": "celeste",
+      "nombre": "Celeste",
+      "imagen": "img/sakura-celeste.jpg",
+      "stock": 5
+    }
+    ]
+  },
+  {
+    "id": "P005",
+    "nombre": "Anotador Personalizado",
+    "categoria": "Personalizados",
+    "precio": 2000,
+    "stock": 11,
+    "imagen": "img/anotador personalizado.png",
+    "imagenes": [
+    "img/sakura-1.jpg",
+    "img/sakura-2.jpg",
+    "img/sakura-3.jpg"
+    ],
+    "descripcion": "Cuaderno artesanal con diseño inspirado en Sakura Card Captor. Ideal para notas, diarios o uso escolar.",
+    "variaciones": [
+    {
+      "id": "rosa",
+      "nombre": "Rosa",
+      "imagen": "img/sakura-rosa.jpg",
+      "stock": 5
+    },
+    {
+      "id": "celeste",
+      "nombre": "Celeste",
+      "imagen": "img/sakura-celeste.jpg",
+      "stock": 5
+    }
+    ]
+  },
+  {
+    "id": "P006",
+    "nombre": "Block de notas Personalizado",
+    "categoria": "Personalizados",
+    "precio": 1500,
+    "stock": 10,
+    "imagen": "img/blocknotaspersonalizados.jpg",
+    "imagenes": [
+    "img/sakura-1.jpg",
+    "img/sakura-2.jpg",
+    "img/sakura-3.jpg"
+    ],
+    "descripcion": "Cuaderno artesanal con diseño inspirado en Sakura Card Captor. Ideal para notas, diarios o uso escolar.",
+    "variaciones": [
+    {
+      "id": "rosa",
+      "nombre": "Rosa",
+      "imagen": "img/sakura-rosa.jpg",
+      "stock": 5
+    },
+    {
+      "id": "celeste",
+      "nombre": "Celeste",
+      "imagen": "img/sakura-celeste.jpg",
+      "stock": 5
+    }
+    ]
+  }
+]

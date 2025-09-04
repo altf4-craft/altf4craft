@@ -1,0 +1,283 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #f8e0f3;
+  }
+  
+  header {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  h1 {
+    color: #333;
+    margin: 0;
+  }
+  
+  #buscador, #filtro {
+    padding: 8px;
+    font-size: 14px;
+  }
+  
+  #carrito-icono {
+    font-size: 24px;
+    cursor: pointer;
+    position: relative;
+  }
+  
+  #contador-carrito {
+    background-color: red;
+    color: white;
+    font-size: 14px;
+    padding: 2px 6px;
+    border-radius: 50%;
+    position: absolute;
+    top: -8px;
+    right: -10px;
+  }
+
+  
+  input[type="number"] {
+    width: 50px;
+    margin-top: 5px;
+  }
+  
+  button {
+    margin-top: 10px;
+    background-color: #c7a2cd;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: #c7a2cd;
+  }
+  
+  /* Modal */
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.5);
+  }
+  
+  .modal-contenido {
+    background-color: white;
+    margin: 10% auto;
+    padding: 20px;
+    width: 90%;
+    max-width: 400px;
+    border-radius: 10px;
+  }
+  
+  .cerrar {
+    float: right;
+    font-size: 24px;
+    cursor: pointer;
+  }
+  
+  #lista-carrito li {
+    margin-bottom: 10px;
+  }
+  
+  .alerta {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: #c7a2cd;
+    color: #fff;
+    padding: 15px;
+    border-radius: 5px;
+    font-weight: bold;
+    display: none;
+  }
+  
+/* Contenedor general */
+#catalogo {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 30px; /* 🔑 espacio uniforme entre columnas y filas */
+  padding: 20px;
+}
+
+/* Card de producto */
+.producto {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  background: white;
+  padding: 15px;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  min-height: 350px;  /* 🔑 asegura altura mínima consistente */
+}
+
+/* Imagen del producto */
+.producto img {
+  max-height: 180px;
+  object-fit: contain;
+  margin-bottom: 10px;
+}
+
+/* Nombre del producto */
+.producto h3 {
+  min-height: 50px;
+  text-align: center;
+}
+
+
+  /* Nuevo
+
+  .catalogo {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  
+  .producto {
+    border: 1px solid #ccc;
+    padding: 10px;
+    width: 200px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 1px 1px 4px rgba(0,0,0,0.1);
+  }
+  
+  .producto img {
+    width: 100%;
+    height: auto;
+    border-radius: 4px;
+  }*/
+
+  .modal {
+  display: none;
+  position: fixed;
+  z-index: 10;
+  left: 0; top: 0;
+  width: 100%; height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  }
+
+  .modal-contenido {
+  background: #fff;
+  margin: 5% auto;
+  padding: 20px;
+  width: 90%;
+  max-width: 600px;
+  border-radius: 10px;
+  }
+
+  .modal-contenido img {
+  max-width: 100%;
+  margin: 5px 0;
+  }
+
+  .cerrar {
+  float: right;
+  font-size: 24px;
+  cursor: pointer;
+  }
+
+   #formulario-cliente {
+    margin-top: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    max-width: 500px;
+  }
+
+  #formulario-cliente form label {
+    display: block;
+    margin: 10px 0;
+  }
+
+  #formulario-cliente button {
+    margin-top: 15px;
+    padding: 10px 15px;
+  }
+
+  /* HEADER */ 
+  .site-header { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    gap: 16px; 
+    padding: 12px 20px;
+    background: #f8e0f3; 
+    border-bottom: 1px solid rgba(0,0,0,0.06); 
+    position: sticky; 
+    top: 0; 
+    z-index: 9999; /* muy alto para que no lo tape nada */ 
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05); 
+  }
+
+  .header-controls { 
+    display:flex; 
+    align-items:center; 
+    gap:12px; 
+  } 
+  
+  .header-controls input[type="text"] { 
+    padding:8px 10px; 
+    border-radius:8px; 
+    border:1px solid #ddd; 
+    width:260px; 
+  } 
+  
+  .header-controls select { 
+    padding:8px; 
+    border-radius:8px; 
+    border:1px solid #ddd;
+  }
+
+  .logo-container { 
+    display:flex; 
+    align-items:center; 
+    gap:12px; 
+  } 
+    
+  .logo { 
+    width:56px; 
+    height:auto; 
+    border-radius:8px; 
+  }
+
+/* FOOTER */ 
+.site-footer { 
+  margin-top:40px; 
+  padding:18px 20px; 
+  background: #f8e0f3; 
+  border-top: 1px solid rgba(0,0,0,0.04); 
+  text-align:center; 
+} 
+
+.site-footer a { 
+  color:#d12b7a; 
+  text-decoration:none; 
+} 
+/* responsive  */
+@media (max-width:720px){ 
+  
+.header-controls input { 
+  width:120px; 
+} 
+
+.site-header { 
+  flex-direction:column;
+  gap:10px; 
+  align-items:flex-start; 
+} 
+}
