@@ -1,0 +1,15 @@
+{
+  "name": "altf4craft",
+  "version": "1.0.0",
+  "description": "## Project Overview Alt F4 Craft is a web application designed to showcase and sell various craft products. The application provides a user-friendly interface for browsing products, applying discounts through coupons, and managing a shopping cart.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "nodemailer": "^7.0.10"
+  }
+}
