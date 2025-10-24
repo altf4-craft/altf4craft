@@ -1,0 +1,20 @@
+<mjml>
+  <mj-body>
+    <mj-section>
+      <mj-column>
+        <mj-image width="100px" src="{{logo}}" />
+        <mj-title>Nuevo Pedido - Alt F4 Craft</mj-title>
+        <mj-text font-size="20px" color="#333">Nuevo pedido de {{nombre}}</mj-text>
+        <mj-text>Email: {{email}}</mj-text>
+        <mj-text>Total: ${{total}}</mj-text>
+        
+        <mj-text font-weight="bold">Productos:</mj-text>
+        {{#each productos}}
+        <mj-text>
+          - {{nombre}} ({{cantidad}}) - ${{subtotal}}
+        </mj-text>
+        {{/each}}
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>

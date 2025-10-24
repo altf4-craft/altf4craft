@@ -172,51 +172,39 @@ document.getElementById('form-datos').addEventListener('submit', async function 
     return;
   }
 
-  let mensaje = `¡Hola! Quiero realizar un pedido:\n\n`;
-  carrito.forEach(item => {
-    mensaje += `- ${item.nombre} x${item.cantidad} ($${item.subtotal})\n`;
-  });
-
   const totalSinDescuento = carrito.reduce((acc, item) => acc + item.subtotal, 0);
   let total = totalSinDescuento;
-
   if (typeof porcentajeDescuento === 'number' && porcentajeDescuento > 0) {
     const descuento = (totalSinDescuento * porcentajeDescuento) / 100;
     total = totalSinDescuento - descuento;
-    mensaje += `\nDescuento aplicado: ${porcentajeDescuento}% (-$${descuento.toFixed(2)})\n`;
   }
 
-  mensaje += `Total: $${total.toFixed(2)}\n\n`;
+  const pedido = {
+    nombre: datos.nombre,
+    email: datos.email,
+    telefono: datos.celular,
+    envio: datos.envio,
+    recibe: datos.recibe,
+    pago: datos.pago,
+    publicidad: datos.publicidad,
+    factura: datos.factura,
+    productos: carrito,
+    total: Number(total.toFixed(2))
+  };
 
-  mensaje += `Datos del cliente:\n`;
-  mensaje += `Nombre: ${datos.nombre}\n`;
-  mensaje += `DNI: ${datos.dni}\n`;
-  mensaje += `Email: ${datos.email}\n`;
-  mensaje += `Celular: ${datos.celular}\n`;
-  mensaje += `Método de envío: ${datos.envio}\n`;
-  mensaje += `Recibe: ${datos.recibe}\n`;
-  mensaje += `Método de pago: ${datos.pago}\n`;
-  mensaje += `¿Autoriza publicación?: ${datos.publicidad}\n`;
-  mensaje += `¿Factura C?: ${datos.factura}\n`;
+  // Enviar al backend (Netlify Function)
+  const ok = await enviarPedido(pedido);
+  if (!ok) return;
 
-  // 📲 Abrir WhatsApp
-  const telefonoVendedor = '5491126116298';
-  const urlWhatsapp = `https://wa.me/${telefonoVendedor}?text=${encodeURIComponent(mensaje)}`;
-  window.open(urlWhatsapp, '_blank');
-
-  // 🔄 Resetear carrito y productos
-  localStorage.removeItem('carrito');  // limpiar localStorage
-  carrito = [];                        // limpiar array en memoria
-  actualizarCarrito();                 // refrescar vista
-
-  // 🔄 Recargar productos si corresponde
+  // Limpiar y mostrar confirmación
+  localStorage.removeItem('carrito');
+  carrito = [];
+  actualizarCarrito();
   if (typeof cargarProductos === 'function') productos = await cargarProductos();
   if (typeof mostrarProductos === 'function') mostrarProductos(productos);
 
-  // ✅ Mostrar mensaje de agradecimiento
   const contenedor = document.getElementById('form-datos').parentElement;
   let mensajeConfirmacion = document.getElementById("mensaje-confirmacion");
-
   if (!mensajeConfirmacion) {
     mensajeConfirmacion = document.createElement('p');
     mensajeConfirmacion.id = "mensaje-confirmacion";
@@ -224,15 +212,8 @@ document.getElementById('form-datos').addEventListener('submit', async function 
     mensajeConfirmacion.style.color = '#e8499a';
     contenedor.appendChild(mensajeConfirmacion);
   }
-
   mensajeConfirmacion.textContent = '¡Gracias por tu pedido! Muy pronto nos pondremos en contacto.';
-
-  // 🕒 Ocultarlo después de 10 segundos
-  setTimeout(() => {
-    mensajeConfirmacion.textContent = '';
-  }, 10000);
-
-  // Resetear el formulario de cliente
+  setTimeout(() => { mensajeConfirmacion.textContent = ''; }, 10000);
   this.reset();
 });
 
@@ -609,51 +590,39 @@ document.getElementById('form-datos').addEventListener('submit', async function 
     return;
   }
 
-  let mensaje = `¡Hola! Quiero realizar un pedido:\n\n`;
-  carrito.forEach(item => {
-    mensaje += `- ${item.nombre} x${item.cantidad} ($${item.subtotal})\n`;
-  });
-
   const totalSinDescuento = carrito.reduce((acc, item) => acc + item.subtotal, 0);
   let total = totalSinDescuento;
-
   if (typeof porcentajeDescuento === 'number' && porcentajeDescuento > 0) {
     const descuento = (totalSinDescuento * porcentajeDescuento) / 100;
     total = totalSinDescuento - descuento;
-    mensaje += `\nDescuento aplicado: ${porcentajeDescuento}% (-$${descuento.toFixed(2)})\n`;
   }
 
-  mensaje += `Total: $${total.toFixed(2)}\n\n`;
+  const pedido = {
+    nombre: datos.nombre,
+    email: datos.email,
+    telefono: datos.celular,
+    envio: datos.envio,
+    recibe: datos.recibe,
+    pago: datos.pago,
+    publicidad: datos.publicidad,
+    factura: datos.factura,
+    productos: carrito,
+    total: Number(total.toFixed(2))
+  };
 
-  mensaje += `Datos del cliente:\n`;
-  mensaje += `Nombre: ${datos.nombre}\n`;
-  mensaje += `DNI: ${datos.dni}\n`;
-  mensaje += `Email: ${datos.email}\n`;
-  mensaje += `Celular: ${datos.celular}\n`;
-  mensaje += `Método de envío: ${datos.envio}\n`;
-  mensaje += `Recibe: ${datos.recibe}\n`;
-  mensaje += `Método de pago: ${datos.pago}\n`;
-  mensaje += `¿Autoriza publicación?: ${datos.publicidad}\n`;
-  mensaje += `¿Factura C?: ${datos.factura}\n`;
+  // Enviar al backend (Netlify Function)
+  const ok = await enviarPedido(pedido);
+  if (!ok) return;
 
-  // 📲 Abrir WhatsApp
-  const telefonoVendedor = '5491126116298';
-  const urlWhatsapp = `https://wa.me/${telefonoVendedor}?text=${encodeURIComponent(mensaje)}`;
-  window.open(urlWhatsapp, '_blank');
-
-  // 🔄 Resetear carrito y productos
-  localStorage.removeItem('carrito');  // limpiar localStorage
-  carrito = [];                        // limpiar array en memoria
-  actualizarCarrito();                 // refrescar vista
-
-  // 🔄 Recargar productos si corresponde
+  // Limpiar y mostrar confirmación
+  localStorage.removeItem('carrito');
+  carrito = [];
+  actualizarCarrito();
   if (typeof cargarProductos === 'function') productos = await cargarProductos();
   if (typeof mostrarProductos === 'function') mostrarProductos(productos);
 
-  // ✅ Mostrar mensaje de agradecimiento
   const contenedor = document.getElementById('form-datos').parentElement;
   let mensajeConfirmacion = document.getElementById("mensaje-confirmacion");
-
   if (!mensajeConfirmacion) {
     mensajeConfirmacion = document.createElement('p');
     mensajeConfirmacion.id = "mensaje-confirmacion";
@@ -661,15 +630,8 @@ document.getElementById('form-datos').addEventListener('submit', async function 
     mensajeConfirmacion.style.color = '#e8499a';
     contenedor.appendChild(mensajeConfirmacion);
   }
-
   mensajeConfirmacion.textContent = '¡Gracias por tu pedido! Muy pronto nos pondremos en contacto.';
-
-  // 🕒 Ocultarlo después de 10 segundos
-  setTimeout(() => {
-    mensajeConfirmacion.textContent = '';
-  }, 10000);
-
-  // Resetear el formulario de cliente
+  setTimeout(() => { mensajeConfirmacion.textContent = ''; }, 10000);
   this.reset();
 });
 
