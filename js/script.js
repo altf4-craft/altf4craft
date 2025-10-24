@@ -578,63 +578,6 @@ function actualizarCarrito() {
   }
 }
 
-document.getElementById('form-datos').addEventListener('submit', async function (e) {
-  e.preventDefault();
-
-  const formData = new FormData(this);
-  const datos = {};
-  formData.forEach((valor, clave) => datos[clave] = valor);
-
-  if (carrito.length === 0) {
-    alert("Tu carrito está vacío.");
-    return;
-  }
-
-  const totalSinDescuento = carrito.reduce((acc, item) => acc + item.subtotal, 0);
-  let total = totalSinDescuento;
-  if (typeof porcentajeDescuento === 'number' && porcentajeDescuento > 0) {
-    const descuento = (totalSinDescuento * porcentajeDescuento) / 100;
-    total = totalSinDescuento - descuento;
-  }
-
-  const pedido = {
-    nombre: datos.nombre,
-    email: datos.email,
-    telefono: datos.celular,
-    envio: datos.envio,
-    recibe: datos.recibe,
-    pago: datos.pago,
-    publicidad: datos.publicidad,
-    factura: datos.factura,
-    productos: carrito,
-    total: Number(total.toFixed(2))
-  };
-
-  // Enviar al backend (Netlify Function)
-  const ok = await enviarPedido(pedido);
-  if (!ok) return;
-
-  // Limpiar y mostrar confirmación
-  localStorage.removeItem('carrito');
-  carrito = [];
-  actualizarCarrito();
-  if (typeof cargarProductos === 'function') productos = await cargarProductos();
-  if (typeof mostrarProductos === 'function') mostrarProductos(productos);
-
-  const contenedor = document.getElementById('form-datos').parentElement;
-  let mensajeConfirmacion = document.getElementById("mensaje-confirmacion");
-  if (!mensajeConfirmacion) {
-    mensajeConfirmacion = document.createElement('p');
-    mensajeConfirmacion.id = "mensaje-confirmacion";
-    mensajeConfirmacion.style.fontWeight = 'bold';
-    mensajeConfirmacion.style.color = '#e8499a';
-    contenedor.appendChild(mensajeConfirmacion);
-  }
-  mensajeConfirmacion.textContent = '¡Gracias por tu pedido! Muy pronto nos pondremos en contacto.';
-  setTimeout(() => { mensajeConfirmacion.textContent = ''; }, 10000);
-  this.reset();
-});
-
 function cambiarCantidad(id, cambio) {
   // Soporta ids con variacion: "P002-rosa" o "P002-Albedo-Mixto"
   let baseId = id;
