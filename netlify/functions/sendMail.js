@@ -56,7 +56,7 @@ export async function handler(event) {
 
     // Mail al admin (con replyTo al cliente)
     const adminMail = {
-      from: process.env.GMAIL_USER,
+      from: `"AltF4 Craft - Papelería y acrílicos" <${process.env.GMAIL_USER}>`,
       to: process.env.ADMIN_EMAIL,
       subject: `Nuevo pedido de ${data.nombre}`,
       html,
