@@ -76,7 +76,7 @@ export async function handler(event) {
         <p>Gracias por comprar en Alt F4 Craft.</p>
       `;
       const clienteMail = {
-        from: process.env.GMAIL_USER,
+        from: `"AltF4 Craft - Papelería y acrílicos" <${process.env.GMAIL_USER}>`,
         to: data.email,
         subject: `Confirmación de pedido - Alt F4 Craft`,
         html: clienteHtml
