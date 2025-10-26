@@ -6,9 +6,15 @@ let totalConDescuento = null;
 let porcentajeDescuento = null;
 
 document.addEventListener('DOMContentLoaded', async () => {
-  productos = await cargarProductos();
-  mostrarProductos(productos);
+  // Initialize cart for all pages
   actualizarCarrito();
+
+  // Only run on index.html (main page)
+  if (document.querySelector('.banner-carrusel')) {
+    initializeCarousel();
+    productos = await cargarProductos();
+    mostrarProductos(productos);
+  }
 });
 
 async function cargarProductos() {
@@ -119,44 +125,54 @@ function eliminarDelCarrito(id) {
 
 function actualizarCarrito() {
   const lista = document.getElementById('lista-carrito');
-  lista.innerHTML = '';
-
-  carrito.forEach(item => {
-    const producto = productos.find(p => p.id === item.id);
-    const maxStock = producto ? producto.stock : item.cantidad;
-
-    const li = document.createElement('li');
-    li.innerHTML = `
-      ${item.nombre} - $${item.precio} x 
-      <button onclick="cambiarCantidad('${item.id}', -1)">-</button>
-      <span id="cantidad-${item.id}">${item.cantidad}</span>
-      <button onclick="cambiarCantidad('${item.id}', 1)">+</button>
-      = $${item.subtotal}
-      <button onclick="eliminarDelCarrito('${item.id}')">Eliminar</button>
-    `;
-    lista.appendChild(li);
-  });
-
-  const total = carrito.reduce((acc, item) => acc + item.subtotal, 0);
-
-  if (typeof porcentajeDescuento === 'number' && porcentajeDescuento > 0) {
-    const descuento = (total * porcentajeDescuento) / 100;
-    totalConDescuento = total - descuento;
-    document.getElementById('total').textContent = `Total: $${totalConDescuento.toFixed(2)}`;
-    document.getElementById('descuento-aplicado').textContent = `Descuento aplicado: -$${descuento.toFixed(2)}`;
-  } else {
-    totalConDescuento = null;
-    document.getElementById('total').textContent = `Total: $${total}`;
-    document.getElementById('descuento-aplicado').textContent = '';
+  const contadorCarrito = document.getElementById('contador-carrito');
+  
+  // Update counter on all pages
+  if (contadorCarrito) {
+    contadorCarrito.textContent = carrito.length;
   }
 
-  document.getElementById('contador-carrito').textContent = carrito.length;
+  // Only update cart list if we're on cart page
+  if (lista) {
+    lista.innerHTML = '';
 
-  if (carrito.length === 0) {
-    document.getElementById('descuento-aplicado').textContent = '';
-    document.getElementById('mensaje-cupon').textContent = '';
-    totalConDescuento = null;
-    porcentajeDescuento = null;
+    carrito.forEach(item => {
+      const producto = productos.find(p => p.id === item.id);
+      const maxStock = producto ? producto.stock : item.cantidad;
+
+      const li = document.createElement('li');
+      li.innerHTML = `
+        ${item.nombre} - $${item.precio} x 
+        <button onclick="cambiarCantidad('${item.id}', -1)">-</button>
+        <span id="cantidad-${item.id}">${item.cantidad}</span>
+        <button onclick="cambiarCantidad('${item.id}', 1)">+</button>
+        = $${item.subtotal}
+        <button onclick="eliminarDelCarrito('${item.id}')">Eliminar</button>
+      `;
+      lista.appendChild(li);
+    });
+
+    const total = carrito.reduce((acc, item) => acc + item.subtotal, 0);
+
+    if (typeof porcentajeDescuento === 'number' && porcentajeDescuento > 0) {
+      const descuento = (total * porcentajeDescuento) / 100;
+      totalConDescuento = total - descuento;
+      document.getElementById('total').textContent = `Total: $${totalConDescuento.toFixed(2)}`;
+      document.getElementById('descuento-aplicado').textContent = `Descuento aplicado: -$${descuento.toFixed(2)}`;
+    } else {
+      totalConDescuento = null;
+      document.getElementById('total').textContent = `Total: $${total}`;
+      document.getElementById('descuento-aplicado').textContent = '';
+    }
+
+    document.getElementById('contador-carrito').textContent = carrito.length;
+
+    if (carrito.length === 0) {
+      document.getElementById('descuento-aplicado').textContent = '';
+      document.getElementById('mensaje-cupon').textContent = '';
+      totalConDescuento = null;
+      porcentajeDescuento = null;
+    }
   }
 }
 
@@ -308,365 +324,15 @@ function ordenarProductos() {
   mostrarProductos(productosOrdenados);
 }
 
-
+// Reemplazar la versión modal por una que navegue a la página de producto
 function mostrarDetalle(id) {
-  const producto = productos.find(p => p.id === id);
-  if (!producto) return;
-
-  const contenedor = document.getElementById('detalle-producto');
-
-  // Prepara el array de imágenes (principal + extras, sin repetir)
-  let imagenes = [];
-  if (producto.imagen) imagenes.push(producto.imagen);
-  if (producto.imagenes && producto.imagenes.length > 0) {
-    producto.imagenes.forEach(src => {
-      if (!imagenes.includes(src)) imagenes.push(src);
-    });
-  }
-
-  // Estado del carrusel
-  let indiceActual = 0;
-
-  // Función para renderizar la imagen y flechas
-  function renderCarrusel() {
-    let flechaIzq = '';
-    let flechaDer = '';
-    if (imagenes.length > 1) {
-      flechaIzq = `<span id="flecha-izq" style="cursor:pointer;font-size:2em;margin-right:10px;">&#8592;</span>`;
-      flechaDer = `<span id="flecha-der" style="cursor:pointer;font-size:2em;margin-left:10px;">&#8594;</span>`;
-    }
-    return `
-      <div style="display:flex;align-items:center;justify-content:center;">
-        ${flechaIzq}
-        <img id="img-carrusel-modal" src="${imagenes[indiceActual]}" alt="extra" style="max-width:320px;max-height:320px;object-fit:contain;display:block;">
-        ${flechaDer}
-      </div>
-    `;
-  }
-
-  // Selector de variantes (igual que antes)
-  let variaciones = producto.variaciones || [];
-  let variacionInicial = variaciones[0] || null;
-  let precioMostrar = variacionInicial ? variacionInicial.precio : producto.precio;
-  let stockMostrar = variacionInicial ? (variacionInicial.stock || variacionInicial.Stock) : producto.stock;
-  let selectorVariaciones = '';
-  if (variaciones.length > 0) {
-    selectorVariaciones = `
-      <label for="variacion-${producto.id}">Variante:</label>
-      <select id="variacion-${producto.id}" onchange="actualizarStockVariacion('${producto.id}')">
-        ${variaciones.map(v => `<option value="${v.nombre}">${v.nombre}</option>`).join('')}
-      </select>
-    `;
-  }
-
-  contenedor.innerHTML = `
-    <h2>${producto.nombre}</h2>
-    <div class="detalle-flex">
-      <div class="carrusel-imagen" id="carrusel-imagen-modal">
-        ${renderCarrusel()}
-      </div>
-      <div class="detalle-controles">
-        <p id="precio-detalle-${producto.id}">Precio: $${precioMostrar}</p>
-        ${selectorVariaciones}
-        <p id="stock-detalle-${producto.id}">Stock: ${stockMostrar}</p>
-        <input type="number" id="detalle-cantidad-${producto.id}" value="1" min="1" max="${stockMostrar}">
-        <button onclick="agregarDesdeDetalle('${producto.id}')">Agregar al carrito</button>
-      </div>
-    </div>
-    <p>${(producto.descripcion || '').replace(/\n/g, '<br>')}</p>
-  `;
-
-  document.getElementById('modal-detalle').style.display = 'block';
-
-  // Flechas: solo si hay más de una imagen
-  if (imagenes.length > 1) {
-    document.getElementById('flecha-izq').onclick = () => {
-      indiceActual = (indiceActual - 1 + imagenes.length) % imagenes.length;
-      document.getElementById('carrusel-imagen-modal').innerHTML = renderCarrusel();
-      addFlechas(); // vuelve a asignar eventos
-    };
-    document.getElementById('flecha-der').onclick = () => {
-      indiceActual = (indiceActual + 1) % imagenes.length;
-      document.getElementById('carrusel-imagen-modal').innerHTML = renderCarrusel();
-      addFlechas();
-    };
-  }
-
-  function addFlechas() {
-    if (imagenes.length > 1) {
-      if (document.getElementById('flecha-izq')) {
-        document.getElementById('flecha-izq').onclick = () => {
-          indiceActual = (indiceActual - 1 + imagenes.length) % imagenes.length;
-          document.getElementById('carrusel-imagen-modal').innerHTML = renderCarrusel();
-          addFlechas();
-        };
-      }
-      if (document.getElementById('flecha-der')) {
-        document.getElementById('flecha-der').onclick = () => {
-          indiceActual = (indiceActual + 1) % imagenes.length;
-          document.getElementById('carrusel-imagen-modal').innerHTML = renderCarrusel();
-          addFlechas();
-        };
-      }
-    }
-  }
-  addFlechas();
-
-  actualizarStockVariacion(producto.id);
+  // redirige a product.html con query param id
+  window.location.href = `product.html?id=${encodeURIComponent(id)}`;
 }
 
-function actualizarStockVariacion(productoId) {
-  const producto = productos.find(p => p.id === productoId);
-  if (!producto || !producto.variaciones) return;
-
-  const select = document.getElementById(`variacion-${productoId}`);
-  const nombreSeleccionado = select ? select.value : null;
-  const variacion = producto.variaciones.find(v => v.nombre === nombreSeleccionado) || producto.variaciones[0];
-
-  // Actualiza stock y precio
-  document.getElementById(`stock-detalle-${productoId}`).innerText = `Stock: ${variacion.stock || variacion.Stock || producto.stock}`;
-  document.getElementById(`detalle-cantidad-${productoId}`).max = variacion.stock || variacion.Stock || producto.stock;
-  document.getElementById(`precio-detalle-${productoId}`).innerText = `Precio: $${variacion.precio || producto.precio}`;
-
-  // Actualiza imagen si corresponde
-  if (variacion.imagen) {
-    document.getElementById(`img-detalle-carrusel`).src = variacion.imagen;
-  } else {
-    document.getElementById(`img-detalle-carrusel`).src = producto.imagen;
-  }
-}
-
-function agregarDesdeDetalle(id) {
-  const producto = productos.find(p => p.id === id);
-  if (!producto) return;
-
-  let cantidad = 1;
-  let stock = producto.stock;
-  let nombreVariacion = null;
-
-  // Si hay variaciones, toma la seleccionada
-  if (producto.variaciones && producto.variaciones.length > 0) {
-    const select = document.getElementById(`variacion-${producto.id}`);
-    nombreVariacion = select ? select.value : null;
-    const variacion = producto.variaciones.find(v => v.nombre === nombreVariacion);
-    if (variacion) stock = variacion.stock || variacion.Stock || producto.stock;
-  }
-
-  const inputCantidad = document.getElementById(`detalle-cantidad-${producto.id}`);
-  if (inputCantidad) {
-    cantidad = parseInt(inputCantidad.value);
-    if (isNaN(cantidad) || cantidad < 1) cantidad = 1;
-    if (cantidad > stock) cantidad = stock;
-    inputCantidad.value = 1;
-  }
-
-  // Pasa la variación seleccionada por nombre
-  agregarAlCarrito(id, cantidad, nombreVariacion ? { nombre: nombreVariacion } : null);
-  cerrarDetalle();
-}
-
-// Modifica agregarAlCarrito para aceptar la variación por nombre
-function agregarAlCarrito(id, cantidadManual, variacionSeleccion = null) {
-  let producto = productos.find(p => p.id === id);
-  let nombre = producto.nombre;
-  let precio = producto.precio;
-  let stock = producto.stock;
-  let idCarrito = id;
-
-  // Si hay variación, ajusta los datos
-  if (
-    variacionSeleccion &&
-    producto.variaciones &&
-    producto.variaciones.length > 0
-  ) {
-    const variacion = producto.variaciones.find(v =>
-      v.nombre === variacionSeleccion.nombre
-    );
-    if (variacion) {
-      nombre += ` (${variacion.nombre})`;
-      stock = variacion.stock || variacion.Stock;
-      idCarrito = `${id}-${variacion.nombre}`;
-      if (variacion.precio) precio = variacion.precio;
-    }
-  }
-
-  let cantidad = cantidadManual !== undefined
-    ? cantidadManual
-    : parseInt(document.getElementById('cantidad-' + id).value);
-
-  if (!producto || cantidad <= 0 || isNaN(cantidad)) {
-    alert("Cantidad inválida o producto no encontrado");
-    return;
-  }
-
-  // Busca por idCarrito (id+variacion)
-  const productoExistente = carrito.find(item => item.id === idCarrito);
-
-  if (productoExistente) {
-    if (productoExistente.cantidad + cantidad > stock) {
-      alert('No hay suficiente stock disponible');
-      return;
-    }
-    productoExistente.cantidad += cantidad;
-    productoExistente.precio = precio;
-    productoExistente.subtotal = productoExistente.cantidad * precio;
-  } else {
-    if (cantidad > stock) {
-      alert('No hay suficiente stock disponible');
-      return;
-    }
-    carrito.push({
-      id: idCarrito,
-      nombre: nombre,
-      precio: precio,
-      cantidad: cantidad,
-      subtotal: precio * cantidad
-    });
-  }
-
-  guardarCarrito();
-  actualizarCarrito();
-  mostrarAlerta();
-}
-
-function eliminarDelCarrito(id) {
-  carrito = carrito.filter(item => item.id !== id);
-  guardarCarrito();
-  actualizarCarrito();
-}
-
-function actualizarCarrito() {
-  const lista = document.getElementById('lista-carrito');
-  lista.innerHTML = '';
-
-  carrito.forEach(item => {
-    const producto = productos.find(p => p.id === item.id);
-    const maxStock = producto ? producto.stock : item.cantidad;
-
-    const li = document.createElement('li');
-    li.innerHTML = `
-      ${item.nombre} - $${item.precio} x 
-      <button onclick="cambiarCantidad('${item.id}', -1)">-</button>
-      <span id="cantidad-${item.id}">${item.cantidad}</span>
-      <button onclick="cambiarCantidad('${item.id}', 1)">+</button>
-      = $${item.subtotal}
-      <button onclick="eliminarDelCarrito('${item.id}')">Eliminar</button>
-    `;
-    lista.appendChild(li);
-  });
-
-  const total = carrito.reduce((acc, item) => acc + item.subtotal, 0);
-
-  if (typeof porcentajeDescuento === 'number' && porcentajeDescuento > 0) {
-    const descuento = (total * porcentajeDescuento) / 100;
-    totalConDescuento = total - descuento;
-    document.getElementById('total').textContent = `Total: $${totalConDescuento.toFixed(2)}`;
-    document.getElementById('descuento-aplicado').textContent = `Descuento aplicado: -$${descuento.toFixed(2)}`;
-  } else {
-    totalConDescuento = null;
-    document.getElementById('total').textContent = `Total: $${total}`;
-    document.getElementById('descuento-aplicado').textContent = '';
-  }
-
-  document.getElementById('contador-carrito').textContent = carrito.length;
-
-  if (carrito.length === 0) {
-    document.getElementById('descuento-aplicado').textContent = '';
-    document.getElementById('mensaje-cupon').textContent = '';
-    totalConDescuento = null;
-    porcentajeDescuento = null;
-  }
-}
-
-function cambiarCantidad(id, cambio) {
-  // Soporta ids con variacion: "P002-rosa" o "P002-Albedo-Mixto"
-  let baseId = id;
-  let variacion1 = null;
-  let variacion2 = null;
-
-  // Extrae variaciones del id del carrito
-  const partes = id.split('-');
-  baseId = partes[0];
-  if (partes.length === 3) {
-    variacion1 = partes[1];
-    variacion2 = partes[2];
-  } else if (partes.length === 2) {
-    variacion1 = partes[1];
-  }
-
-  const producto = productos.find(p => p.id === baseId);
-  const item = carrito.find(p => p.id === id);
-
-  if (!producto || !item) return;
-
-  let stock = producto.stock;
-  let precio = producto.precio;
-  if (producto.variaciones && producto.variaciones.length > 0 && variacion1) {
-    const variacion = producto.variaciones.find(v =>
-      v.variacion1 === variacion1 && (variacion2 ? v.variacion2 === variacion2 : true)
-    );
-    if (variacion) {
-      stock = variacion.Stock || variacion.stock || producto.stock;
-      if (variacion.precio) precio = variacion.precio;
-    }
-  }
-
-  const nuevaCantidad = item.cantidad + cambio;
-
-  if (nuevaCantidad < 1) return;
-  if (nuevaCantidad > stock) {
-    alert('No hay suficiente stock disponible');
-    return;
-  }
-
-  item.cantidad = nuevaCantidad;
-  item.precio = precio; // Asegura que el precio sea el correcto para la variante
-  item.subtotal = precio * nuevaCantidad;
-
-  guardarCarrito();
-  actualizarCarrito();
-}
-
-
-function guardarCarrito() {
-  localStorage.setItem('carrito', JSON.stringify(carrito));
-}
-
-function mostrarAlerta() {
-  const alerta = document.getElementById('alerta');
-  alerta.style.display = 'block';
-  setTimeout(() => {
-    alerta.style.display = 'none';
-  }, 1500);
-}
-
-function abrirModal() {
-  document.getElementById('modal-carrito').style.display = 'block';
-}
-
-function cerrarModal() {
-  document.getElementById('modal-carrito').style.display = 'none';
-}
-
-function filtrarProductos() {
-  const texto = document.getElementById('buscador').value.toLowerCase();
-  const productosFiltrados = productos.filter(p => p.nombre.toLowerCase().includes(texto));
-  mostrarProductos(productosFiltrados);
-}
-
-function ordenarProductos() {
-  const filtro = document.getElementById('filtro').value;
-  let productosOrdenados = [...productos];
-
-  if (filtro === 'precio-asc') {
-    productosOrdenados.sort((a, b) => a.precio - b.precio);
-  } else if (filtro === 'precio-desc') {
-    productosOrdenados.sort((a, b) => b.precio - a.precio);
-  } else if (filtro === 'nombre') {
-    productosOrdenados.sort((a, b) => a.nombre.localeCompare(b.nombre));
-  }
-
-  mostrarProductos(productosOrdenados);
+// Nueva función para ir a la página del carrito
+function goToCart() {
+  window.location.href = 'cart.html';
 }
 
 let imagenesCarrusel = [];
@@ -677,41 +343,66 @@ function cerrarDetalle() {
   document.getElementById('modal-detalle').style.display = 'none';
 }
 
-// Carrusel Banner
-document.addEventListener('DOMContentLoaded', () => {
+// Banner carousel functionality
+function initializeCarousel() {
   const slides = document.querySelectorAll('.banner-slide');
-  const puntosCont = document.getElementById('banner-puntos');
-  let actual = 0;
+  const dots = document.getElementById('banner-puntos');
+  const prevBtn = document.getElementById('banner-prev');
+  const nextBtn = document.getElementById('banner-next');
+  let currentSlide = 0;
 
-  // Crear puntos
-  slides.forEach((_, i) => {
-    const punto = document.createElement('span');
-    punto.onclick = () => mostrarSlide(i);
-    puntosCont.appendChild(punto);
+  if (!slides.length || !dots || !prevBtn || !nextBtn) return;
+
+  // Create dots
+  slides.forEach((_, idx) => {
+    const dot = document.createElement('span');
+    dot.addEventListener('click', () => goToSlide(idx));
+    dots.appendChild(dot);
   });
 
-  function mostrarSlide(idx) {
-    slides.forEach((slide, i) => {
-      slide.classList.toggle('active', i === idx);
-      puntosCont.children[i].classList.toggle('activo', i === idx);
-    });
-    actual = idx;
+  // Update dots and slides
+  function updateSlides() {
+    slides.forEach(slide => slide.classList.remove('active'));
+    slides[currentSlide].classList.add('active');
+    
+    const allDots = dots.querySelectorAll('span');
+    allDots.forEach(dot => dot.classList.remove('activo'));
+    allDots[currentSlide].classList.add('activo');
   }
 
-  document.getElementById('banner-prev').onclick = () => {
-    mostrarSlide((actual - 1 + slides.length) % slides.length);
-  };
-  document.getElementById('banner-next').onclick = () => {
-    mostrarSlide((actual + 1) % slides.length);
-  };
+  function nextSlide() {
+    currentSlide = (currentSlide + 1) % slides.length;
+    updateSlides();
+  }
 
-  mostrarSlide(0);
+  function prevSlide() {
+    currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+    updateSlides();
+  }
 
-  // Auto-avance cada 6 segundos
-  setInterval(() => {
-    mostrarSlide((actual + 1) % slides.length);
-  }, 8000);
-});
+  function goToSlide(idx) {
+    currentSlide = idx;
+    updateSlides();
+  }
+
+  // Event listeners
+  prevBtn.addEventListener('click', prevSlide);
+  nextBtn.addEventListener('click', nextSlide);
+
+  // Auto advance
+  let interval = setInterval(nextSlide, 5000);
+
+  // Pause on hover
+  const carousel = document.querySelector('.banner-carrusel');
+  carousel.addEventListener('mouseenter', () => clearInterval(interval));
+  carousel.addEventListener('mouseleave', () => {
+    clearInterval(interval);
+    interval = setInterval(nextSlide, 5000);
+  });
+
+  // Initial state
+  updateSlides();
+}
 
 // Modifica la función aplicarDescuento en cupones.js así:
 function aplicarDescuento(porcentaje) {

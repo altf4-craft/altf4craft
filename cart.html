@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Carrito - Alt F4 Craft</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="logo-container">
+        <img src="img/Logo_AltF4.png" alt="Logo Alt F4 Craft" class="logo" />
+        <h1>Alt F4 Craft</h1>
+      </div>
+      <nav>
+        <a href="index.html" title="Catálogo"><i class="fas fa-store"></i></a>
+      </nav>
+    </header>
+
+    <main class="container">
+      <h2>Carrito</h2>
+      <ul id="lista-carrito"></ul>
+
+      <div id="cupon-container" class="cupon-section">
+        <label for="codigo-cupon">¿Tenés un cupón de descuento?</label>
+        <div class="cupon-inputs">
+          <input type="text" id="codigo-cupon" placeholder="Ingresá tu código" />
+          <button id="aplicar-cupon">Aplicar</button>
+        </div>
+        <p id="mensaje-cupon"></p>
+      </div>
+
+      <p id="descuento-aplicado" style="color:#e8499a;font-weight:bold"></p>
+      <p id="total">Total: $0</p>
+
+      <section id="formulario-cliente">
+        <h2>Datos del cliente</h2>
+        <form id="form-datos" style="display:flex;flex-direction:column;gap:10px;max-width:600px;">
+          <div>
+            <label>Nombre completo</label>
+            <input name="nombre" placeholder="Ej: Alison Pérez" required />
+          </div>
+
+          <div>
+            <label>DNI</label>
+            <input name="dni" placeholder="Ej: 30111222" required />
+          </div>
+
+          <div>
+            <label>Email</label>
+            <input name="email" type="email" placeholder="Ej: alison@email.com" required />
+          </div>
+
+          <div>
+            <label>Celular</label>
+            <input name="celular" placeholder="Ej: 1155552222" required />
+          </div>
+
+          <div>
+            <label>Método de envío</label>
+            <select name="envio" required>
+              <option value="Punto de retiro">Punto de retiro</option>
+              <option value="Evento">Evento</option>
+              <option value="Envío por correo">Envío por correo</option>
+            </select>
+          </div>
+
+          <div>
+            <label>¿Quién recibe?</label>
+            <input name="recibe" placeholder="Ej: Tu nombre o el de alguien más" required />
+          </div>
+
+          <div>
+            <label>Método de pago</label>
+            <select name="pago" required>
+              <option value="Transferencia">Transferencia</option>
+              <option value="Link de pago">Link de pago</option>
+            </select>
+          </div>
+
+          <div>
+            <label>¿Autoriza publicación?</label>
+            <select name="publicidad" required>
+              <option value="Sí">Sí</option>
+              <option value="No">No</option>
+            </select>
+          </div>
+
+          <div>
+            <label>¿Factura C?</label>
+            <select name="factura" required>
+              <option value="Sí">Sí</option>
+              <option value="No">No</option>
+            </select>
+          </div>
+
+          <button type="submit">Enviar pedido</button>
+        </form>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>&copy; 2025 Alt F4 Craft - Todos los derechos reservados.</p>
+      <p><a href="https://www.instagram.com/altf4.craft/" target="_blank">Instagram</a></p>
+    </footer>
+
+    <!-- Scripts: carga carrito.js (enviarPedido), script.js (lógica general), page-cart.js (render específico) -->
+    <script src="js/carrito.js"></script>
+    <script src="js/script.js"></script>
+    <script src="js/page-cart.js"></script>
+  </body>
+</html>
