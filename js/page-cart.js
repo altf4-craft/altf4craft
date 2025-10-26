@@ -92,108 +92,26 @@ function renderCartPage() {
 
   carritoLocal.forEach(item => {
     const li = document.createElement('li');
-
-    const meta = document.createElement('div');
-    meta.className = 'meta';
-    const name = document.createElement('div');
-    name.className = 'name';
-    name.textContent = item.nombre || 'Producto';
-    meta.appendChild(name);
-    const desc = document.createElement('div');
-    desc.className = 'desc';
-    desc.textContent = `$${Number(item.precio).toFixed(2)} — Subtotal: $${Number(item.subtotal).toFixed(2)}`;
-    meta.appendChild(desc);
-
-    // controles de cantidad compactos
-    const controls = document.createElement('div');
-    controls.className = 'qty-controls';
-
-    const minus = document.createElement('button');
-    minus.type = 'button';
-    minus.className = 'cant-minus';
-    minus.setAttribute('data-id', item.id);
-    minus.setAttribute('data-variacion', item.variacion || '');
-    minus.textContent = '-';
-
-    const spanQty = document.createElement('span');
-    spanQty.className = 'cantidad';
-    spanQty.textContent = item.cantidad;
-
-    const plus = document.createElement('button');
-    plus.type = 'button';
-    plus.className = 'cant-plus';
-    plus.setAttribute('data-id', item.id);
-    plus.setAttribute('data-variacion', item.variacion || '');
-    plus.textContent = '+';
-
-    // Eliminar
-    const eliminar = document.createElement('button');
-    eliminar.type = 'button';
-    eliminar.className = 'eliminar-item';
-    eliminar.setAttribute('data-id', item.id);
-    eliminar.setAttribute('data-variacion', item.variacion || '');
-    eliminar.textContent = 'Eliminar';
-    eliminar.style.marginLeft = '8px';
-    eliminar.style.background = 'transparent';
-    eliminar.style.border = 'none';
-    eliminar.style.color = '#6b5968';
-    eliminar.style.cursor = 'pointer';
-
-    controls.appendChild(minus);
-    controls.appendChild(spanQty);
-    controls.appendChild(plus);
-    controls.appendChild(eliminar);
-
-    li.appendChild(meta);
-    li.appendChild(controls);
-    ul.appendChild(li);
+    li.className = 'carrito-item';
+    li.innerHTML = `
+      <div>
+        <strong>${escapeHtml(item.nombre)}</strong>
+        <div>Precio: $${Number(item.precio).toFixed(2)}</div>
+        <div>
+          <button class="cant-minus" data-id="${item.id}" data-variacion="${item.variacion || ''}">-</button>
+          <span class="cantidad">${item.cantidad}</span>
+          <button class="cant-plus" data-id="${item.id}" data-variacion="${item.variacion || ''}">+</button>
+        </div>
+        <div>Subtotal: $${Number(item.subtotal).toFixed(2)}</div>
+        <div><button class="eliminar-item" data-id="${item.id}" data-variacion="${item.variacion || ''}">Eliminar</button></div>
+      </div>
+    `;
+    listaEl.appendChild(li);
   });
 
-  rightCol.appendChild(ul);
-
-  // total y promo
-  const totalWrap = document.createElement('div');
-  totalWrap.className = 'cart-total';
-  const totalLabel = document.createElement('div');
-  totalLabel.textContent = 'Total:';
-  const totalValue = document.createElement('div');
-  const totalSum = carritoLocal.reduce((s, it) => s + Number(it.subtotal || 0), 0);
-  totalValue.textContent = `$${totalSum.toFixed(2)}`;
-  totalWrap.appendChild(totalLabel);
-  totalWrap.appendChild(totalValue);
-  rightCol.appendChild(totalWrap);
-
-  // promo code input
-  const promo = document.createElement('div');
-  promo.className = 'promo';
-  const promoInput = document.createElement('input');
-  promoInput.type = 'text';
-  promoInput.placeholder = 'Código promo';
-  promoInput.id = 'promo-input';
-  const promoBtn = document.createElement('button');
-  promoBtn.type = 'button';
-  promoBtn.id = 'apply-promo';
-  promoBtn.textContent = 'Aplicar';
-  promoBtn.style.background = '#f276b6';
-  promoBtn.style.border = 'none';
-  promoBtn.style.color = '#fff';
-  promoBtn.style.padding = '6px 10px';
-  promoBtn.style.borderRadius = '4px';
-  promo.appendChild(promoInput);
-  promo.appendChild(promoBtn);
-  rightCol.appendChild(promo);
-
-  // ensamblar grid
-  grid.appendChild(leftCol);
-  grid.appendChild(rightCol);
-
-  // insertar en DOM
-  listaEl.appendChild(grid);
-
-  // actualizar total element si existe fuera del contenedor
-  if (totalEl) totalEl.textContent = `Total: $${totalSum.toFixed(2)}`;
-  if (descuentoEl) descuentoEl.textContent = '';
-
+  const total = carritoLocal.reduce((sum, it) => sum + Number(it.subtotal || 0), 0);
+  if (totalEl) totalEl.textContent = `Total: $${total.toFixed(2)}`;
+  if (descuentoEl) descuentoEl.textContent = (window.porcentajeDescuento ? `Descuento aplicado: ${window.porcentajeDescuento}%` : '');
 }
 
 // pequeño helper

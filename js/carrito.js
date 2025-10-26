@@ -55,36 +55,22 @@ window.agregarAlCarrito = function(idOrProduct, cantidadManual = 1, variacionSel
       return;
     }
 
-    // Cantidad solicitada
-    let cantidad = Math.max(0, Number(cantidadManual) || 1);
+    const cantidad = Number(cantidadManual) || 1;
 
-    // Determinar stock disponible (variación > producto)
-    let disponible = Infinity;
+    // Precio / variación
+    let precio = Number(producto.precio ?? 0);
     let variacionNombre = null;
     if (variacionSeleccion) {
       if (typeof variacionSeleccion === 'object') {
         variacionNombre = variacionSeleccion.nombre ?? variacionSeleccion.id ?? String(variacionSeleccion);
-        if (typeof variacionSeleccion.stock !== 'undefined') {
-          disponible = Number(variacionSeleccion.stock);
-        }
+        precio = Number(variacionSeleccion.precio ?? precio);
       } else {
-        // buscar variación por id/nombre en el producto
         variacionNombre = String(variacionSeleccion);
         const v = (producto.variaciones || []).find(x =>
           String(x.id) === variacionNombre || String(x.nombre) === variacionNombre
         );
-        if (v && typeof v.stock !== 'undefined') disponible = Number(v.stock);
+        if (v) precio = Number(v.precio ?? precio);
       }
-    }
-
-    // si no se obtuvo stock de la variación, tomar el del producto si existe
-    if (!isFinite(disponible) && typeof producto.stock !== 'undefined') {
-      disponible = Number(producto.stock);
-    }
-
-    if (!isFinite(disponible)) {
-      // si no hay información de stock, asumimos ilimitado (comportamiento previo)
-      disponible = Infinity;
     }
 
     const idStr = String(id ?? producto.id ?? '');
@@ -92,51 +78,18 @@ window.agregarAlCarrito = function(idOrProduct, cantidadManual = 1, variacionSel
     const itemExistente = carrito.find(item => String(item.id) === idStr && item.variacion === variacionNombre);
 
     if (itemExistente) {
-      const maxAñadible = Math.max(0, disponible === Infinity ? Infinity : (disponible - Number(itemExistente.cantidad)));
-      if (maxAñadible <= 0) {
-        if (typeof mostrarAlerta === 'function') mostrarAlerta('No hay suficiente stock para agregar más unidades', 'error');
-        return;
-      }
-      const añadir = Math.min(cantidad, maxAñadible);
-      itemExistente.cantidad += añadir;
+      itemExistente.cantidad += cantidad;
       itemExistente.subtotal = itemExistente.cantidad * itemExistente.precio;
-      if (añadir < cantidad && typeof mostrarAlerta === 'function') {
-        mostrarAlerta(`Solo se añadieron ${añadir} unidades (límite de stock alcanzado)`, 'warning');
-      }
     } else {
-      // para nuevo item, limitar la cantidad al stock disponible
-      const cantidadPermitida = disponible === Infinity ? cantidad : Math.min(cantidad, disponible);
-      if (cantidadPermitida <= 0) {
-        if (typeof mostrarAlerta === 'function') mostrarAlerta('Producto sin stock', 'error');
-        return;
-      }
-
-      // Precio / variación (mantener lógica previa)
-      let precio = Number(producto.precio ?? 0);
-      if (variacionSeleccion) {
-        if (typeof variacionSeleccion === 'object') {
-          precio = Number(variacionSeleccion.precio ?? precio);
-        } else {
-          const v = (producto.variaciones || []).find(x =>
-            String(x.id) === String(variacionSeleccion) || String(x.nombre) === String(variacionSeleccion)
-          );
-          if (v) precio = Number(v.precio ?? precio);
-        }
-      }
-
       carrito.push({
         id: idStr,
         nombre: producto.nombre,
         precio,
-        cantidad: cantidadPermitida,
+        cantidad,
         variacion: variacionNombre,
-        subtotal: cantidadPermitida * precio,
+        subtotal: cantidad * precio,
         imagen: producto.imagen || (Array.isArray(producto.imagenes) && producto.imagenes[0]) || ''
       });
-
-      if (cantidadPermitida < cantidad && typeof mostrarAlerta === 'function') {
-        mostrarAlerta(`Solo se añadieron ${cantidadPermitida} unidades (límite de stock)`, 'warning');
-      }
     }
 
     if (typeof guardarCarrito === 'function') guardarCarrito();
