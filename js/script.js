@@ -15,6 +15,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     productos = await cargarProductos();
     mostrarProductos(productos);
   }
+
+  // renderiza footer en todas las páginas que carguen este script
+  try { renderFooter(); } catch (e) { console.error('renderFooter error', e); }
 });
 
 async function cargarProductos() {
@@ -62,53 +65,58 @@ function eliminarDelCarrito(id) {
 function actualizarCarrito() {
   const lista = document.getElementById('lista-carrito');
   const contadorCarrito = document.getElementById('contador-carrito');
-  
-  // Update counter on all pages
+
+  // Siempre actualizar contador si existe (todas las páginas)
   if (contadorCarrito) {
     contadorCarrito.textContent = carrito.length;
   }
 
-  // Only update cart list if we're on cart page
-  if (lista) {
-    lista.innerHTML = '';
+  // Si no estamos en la página del carrito (no hay lista), salir
+  if (!lista) return;
 
-    carrito.forEach(item => {
-      const producto = productos.find(p => p.id === item.id);
-      const maxStock = producto ? producto.stock : item.cantidad;
+  // Si estamos en la página del carrito, renderizar la lista y totales
+  lista.innerHTML = '';
 
-      const li = document.createElement('li');
-      li.innerHTML = `
-        ${item.nombre} - $${item.precio} x 
-        <button onclick="cambiarCantidad('${item.id}', -1)">-</button>
-        <span id="cantidad-${item.id}">${item.cantidad}</span>
-        <button onclick="cambiarCantidad('${item.id}', 1)">+</button>
-        = $${item.subtotal}
-        <button onclick="eliminarDelCarrito('${item.id}')">Eliminar</button>
-      `;
-      lista.appendChild(li);
-    });
+  carrito.forEach(item => {
+    const producto = (window.productos || []).find(p => String(p.id) === String(item.id));
+    const maxStock = producto ? producto.stock : item.cantidad;
 
-    const total = carrito.reduce((acc, item) => acc + item.subtotal, 0);
+    const li = document.createElement('li');
+    li.innerHTML = `
+      ${item.nombre} - $${item.precio} x 
+      <button onclick="cambiarCantidad('${item.id}', -1)">-</button>
+      <span id="cantidad-${item.id}">${item.cantidad}</span>
+      <button onclick="cambiarCantidad('${item.id}', 1)">+</button>
+      = $${item.subtotal}
+      <button onclick="eliminarDelCarrito('${item.id}')">Eliminar</button>
+    `;
+    lista.appendChild(li);
+  });
 
-    if (typeof porcentajeDescuento === 'number' && porcentajeDescuento > 0) {
-      const descuento = (total * porcentajeDescuento) / 100;
-      totalConDescuento = total - descuento;
-      document.getElementById('total').textContent = `Total: $${totalConDescuento.toFixed(2)}`;
-      document.getElementById('descuento-aplicado').textContent = `Descuento aplicado: -$${descuento.toFixed(2)}`;
-    } else {
-      totalConDescuento = null;
-      document.getElementById('total').textContent = `Total: $${total}`;
-      document.getElementById('descuento-aplicado').textContent = '';
-    }
+  const total = carrito.reduce((acc, item) => acc + item.subtotal, 0);
 
-    document.getElementById('contador-carrito').textContent = carrito.length;
+  const totalEl = document.getElementById('total');
+  const descuentoEl = document.getElementById('descuento-aplicado');
+  const mensajeCuponEl = document.getElementById('mensaje-cupon');
 
-    if (carrito.length === 0) {
-      document.getElementById('descuento-aplicado').textContent = '';
-      document.getElementById('mensaje-cupon').textContent = '';
-      totalConDescuento = null;
-      porcentajeDescuento = null;
-    }
+  if (typeof porcentajeDescuento === 'number' && porcentajeDescuento > 0) {
+    const descuento = (total * porcentajeDescuento) / 100;
+    totalConDescuento = total - descuento;
+    if (totalEl) totalEl.textContent = `Total: $${totalConDescuento.toFixed(2)}`;
+    if (descuentoEl) descuentoEl.textContent = `Descuento aplicado: -$${descuento.toFixed(2)}`;
+  } else {
+    totalConDescuento = null;
+    if (totalEl) totalEl.textContent = `Total: $${total}`;
+    if (descuentoEl) descuentoEl.textContent = '';
+  }
+
+  if (contadorCarrito) contadorCarrito.textContent = carrito.length;
+
+  if (carrito.length === 0) {
+    if (descuentoEl) descuentoEl.textContent = '';
+    if (mensajeCuponEl) mensajeCuponEl.textContent = '';
+    totalConDescuento = null;
+    porcentajeDescuento = null;
   }
 }
 
@@ -173,33 +181,39 @@ document.getElementById('form-datos').addEventListener('submit', async function 
 });
 
 function cambiarCantidad(id, cambio = 0, variacion = null) {
-  // id puede ser string; variacion opcional (nombre)
+  if (!id) return;
+  // asegurar tipos numéricos
+  const delta = Number(cambio) || 0;
+  if (delta === 0) return;
+
+  // localizar item
   const idStr = String(id);
-  const item = carrito.find(it => String(it.id) === idStr && (variacion == null || it.variacion === variacion));
-  if (!item) {
-    // si no existe, intentar añadir usando agregarAlCarrito
-    if (typeof window.agregarAlCarrito === 'function') {
-      // si cambio > 0 añadimos nueva cantidad
-      if (cambio > 0) {
-        window.agregarAlCarrito(idStr, cambio, variacion);
-      }
+  const idx = carrito.findIndex(it => String(it.id) === idStr && (variacion == null || it.variacion === variacion));
+  if (idx === -1) {
+    // si no existe y delta > 0, añadirlo (usa agregarAlCarrito si existe)
+    if (delta > 0 && typeof window.agregarAlCarrito === 'function') {
+      window.agregarAlCarrito(idStr, delta, variacion);
     }
     return;
   }
 
-  item.cantidad = Math.max(1, Number(item.cantidad) + Number(cambio));
-  item.subtotal = item.cantidad * item.precio;
+  const item = carrito[idx];
 
-  // Si la cantidad quedó 0 eliminar
-  if (item.cantidad <= 0) {
-    carrito = carrito.filter(it => !(String(it.id) === idStr && (variacion == null || it.variacion === variacion)));
+  // calcular nueva cantidad con límites razonables
+  const nuevaCantidad = Math.max(0, Math.min(9999, Number(item.cantidad) + delta));
+  if (!Number.isFinite(nuevaCantidad)) return;
+
+  if (nuevaCantidad === 0) {
+    // eliminar ítem
+    carrito.splice(idx, 1);
+  } else {
+    item.cantidad = nuevaCantidad;
+    item.subtotal = Number(item.precio) * item.cantidad;
   }
 
   if (typeof guardarCarrito === 'function') guardarCarrito();
   if (typeof actualizarCarrito === 'function') actualizarCarrito();
 }
-
-// Exportar a window por si otros scripts lo llaman
 window.cambiarCantidad = cambiarCantidad;
 
 function guardarCarrito() {
@@ -370,4 +384,18 @@ document.addEventListener('DOMContentLoaded', function() {
   // Ejecuta al cargar la página por si hay valores preseleccionados
   actualizarOpcionesPago();
 });
+
+// Renderizar footer común (usa innerHTML para no romper estructura)
+function renderFooter() {
+  const footerInner = `
+    <div class="site-footer-inner">
+      <p>&copy; ${new Date().getFullYear()} Alt F4 Craft - Todos los derechos reservados.</p>
+      <p><a href="https://www.instagram.com/altf4.craft/" target="_blank" rel="noopener">Instagram</a></p>
+    </div>
+  `;
+  document.querySelectorAll('.site-footer').forEach(el => {
+    try { el.innerHTML = footerInner; }
+    catch (err) { console.error('renderFooter error', err); }
+  });
+}
 
