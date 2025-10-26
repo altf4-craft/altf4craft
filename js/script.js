@@ -172,56 +172,35 @@ document.getElementById('form-datos').addEventListener('submit', async function 
   this.reset();
 });
 
-function cambiarCantidad(id, cambio) {
-  // Soporta ids con variacion: "P002-rosa" o "P002-Albedo-Mixto"
-  let baseId = id;
-  let variacion1 = null;
-  let variacion2 = null;
-
-  // Extrae variaciones del id del carrito
-  const partes = id.split('-');
-  baseId = partes[0];
-  if (partes.length === 3) {
-    variacion1 = partes[1];
-    variacion2 = partes[2];
-  } else if (partes.length === 2) {
-    variacion1 = partes[1];
-  }
-
-  const producto = productos.find(p => p.id === baseId);
-  const item = carrito.find(p => p.id === id);
-
-  if (!producto || !item) return;
-
-  let stock = producto.stock;
-  let precio = producto.precio;
-  if (producto.variaciones && producto.variaciones.length > 0 && variacion1) {
-    const variacion = producto.variaciones.find(v =>
-      v.variacion1 === variacion1 && (variacion2 ? v.variacion2 === variacion2 : true)
-    );
-    if (variacion) {
-      stock = variacion.Stock || variacion.stock || producto.stock;
-      if (variacion.precio) precio = variacion.precio;
+function cambiarCantidad(id, cambio = 0, variacion = null) {
+  // id puede ser string; variacion opcional (nombre)
+  const idStr = String(id);
+  const item = carrito.find(it => String(it.id) === idStr && (variacion == null || it.variacion === variacion));
+  if (!item) {
+    // si no existe, intentar añadir usando agregarAlCarrito
+    if (typeof window.agregarAlCarrito === 'function') {
+      // si cambio > 0 añadimos nueva cantidad
+      if (cambio > 0) {
+        window.agregarAlCarrito(idStr, cambio, variacion);
+      }
     }
-  }
-
-  const nuevaCantidad = item.cantidad + cambio;
-
-  if (nuevaCantidad < 1) return;
-  if (nuevaCantidad > stock) {
-    alert('No hay suficiente stock disponible');
     return;
   }
 
-  item.cantidad = nuevaCantidad;
-  item.precio = precio; // Asegura que el precio sea el correcto para la variante
-  item.subtotal = precio * nuevaCantidad;
+  item.cantidad = Math.max(1, Number(item.cantidad) + Number(cambio));
+  item.subtotal = item.cantidad * item.precio;
 
-  guardarCarrito();
-  actualizarCarrito();
-  mostrarAlerta();
+  // Si la cantidad quedó 0 eliminar
+  if (item.cantidad <= 0) {
+    carrito = carrito.filter(it => !(String(it.id) === idStr && (variacion == null || it.variacion === variacion)));
+  }
+
+  if (typeof guardarCarrito === 'function') guardarCarrito();
+  if (typeof actualizarCarrito === 'function') actualizarCarrito();
 }
 
+// Exportar a window por si otros scripts lo llaman
+window.cambiarCantidad = cambiarCantidad;
 
 function guardarCarrito() {
   localStorage.setItem('carrito', JSON.stringify(carrito));

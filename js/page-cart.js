@@ -49,15 +49,31 @@ function renderCartPage() {
   listaEl.addEventListener('click', (e) => {
     const target = e.target;
     const id = target.getAttribute('data-id');
+    // botones +/- tienen clases cant-minus / cant-plus
     if (target.classList.contains('cant-minus')) {
-      cambiarCantidad(id, -1);
-      renderCartPage();
+      // si tienes variaciones, almacena data-variacion en el botón y pásala
+      const variacion = target.getAttribute('data-variacion') || null;
+      if (typeof window.cambiarCantidad === 'function') {
+        window.cambiarCantidad(id, -1, variacion);
+        renderCartPage();
+      }
     } else if (target.classList.contains('cant-plus')) {
-      cambiarCantidad(id, 1);
-      renderCartPage();
+      const variacion = target.getAttribute('data-variacion') || null;
+      if (typeof window.cambiarCantidad === 'function') {
+        window.cambiarCantidad(id, 1, variacion);
+        renderCartPage();
+      }
     } else if (target.classList.contains('eliminar-item')) {
-      eliminarDelCarrito(id);
-      renderCartPage();
+      const variacion = target.getAttribute('data-variacion') || null;
+      if (typeof window.eliminarDelCarrito === 'function') {
+        window.eliminarDelCarrito(id, variacion);
+        renderCartPage();
+      } else {
+        // fallback
+        carrito = carrito.filter(it => !(String(it.id) === String(id) && (variacion == null || it.variacion === variacion)));
+        if (typeof guardarCarrito === 'function') guardarCarrito();
+        renderCartPage();
+      }
     }
   });
 }

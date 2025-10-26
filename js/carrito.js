@@ -36,7 +36,7 @@ async function enviarPedido(pedido) {
 
 window.agregarAlCarrito = function(idOrProduct, cantidadManual = 1, variacionSeleccion = null) {
   try {
-    // Resolver producto (acepta id/sku/codigo o el objeto producto)
+    // Resolver producto (acepta id o objeto)
     let producto = null;
     let id = null;
     if (typeof idOrProduct === 'object' && idOrProduct !== null) {
@@ -51,15 +51,13 @@ window.agregarAlCarrito = function(idOrProduct, cantidadManual = 1, variacionSel
 
     if (!producto) {
       console.error('agregarAlCarrito: producto no encontrado', idOrProduct);
-      if (typeof mostrarAlerta === 'function') {
-        mostrarAlerta('Error al agregar al carrito: producto no encontrado', 'error');
-      }
+      if (typeof mostrarAlerta === 'function') mostrarAlerta('Producto no encontrado', 'error');
       return;
     }
 
     const cantidad = Number(cantidadManual) || 1;
 
-    // Determinar precio y nombre de variación si aplica
+    // Precio / variación
     let precio = Number(producto.precio ?? 0);
     let variacionNombre = null;
     if (variacionSeleccion) {
@@ -77,7 +75,6 @@ window.agregarAlCarrito = function(idOrProduct, cantidadManual = 1, variacionSel
 
     const idStr = String(id ?? producto.id ?? '');
 
-    // Buscar ítem igual (mismo id + misma variación)
     const itemExistente = carrito.find(item => String(item.id) === idStr && item.variacion === variacionNombre);
 
     if (itemExistente) {
@@ -95,14 +92,11 @@ window.agregarAlCarrito = function(idOrProduct, cantidadManual = 1, variacionSel
       });
     }
 
-    // funciones ya existentes en tu archivo
     if (typeof guardarCarrito === 'function') guardarCarrito();
     if (typeof actualizarCarrito === 'function') actualizarCarrito();
     if (typeof mostrarAlerta === 'function') mostrarAlerta();
   } catch (err) {
     console.error('agregarAlCarrito error:', err);
-    if (typeof mostrarAlerta === 'function') {
-      mostrarAlerta('Error al agregar al carrito', 'error');
-    }
+    if (typeof mostrarAlerta === 'function') mostrarAlerta('Error al agregar al carrito', 'error');
   }
 };
