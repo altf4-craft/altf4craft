@@ -57,6 +57,22 @@ function renderCartPage() {
   }
 
   carritoLocal.forEach(item => {
+    // encontrar producto para saber el stock
+    const producto = (window.productos || []).find(p => String(p.id) === String(item.id));
+    let maxStock = item.cantidad; // por defecto permitir la cantidad actual
+    if (producto) {
+      // buscar stock en variación si existe
+      if (item.variacion) {
+        const v = (producto.variaciones || []).find(x => String(x.id) === String(item.variacion) || String(x.nombre) === String(item.variacion));
+        if (v && typeof v.stock !== 'undefined') maxStock = Number(v.stock);
+        else maxStock = typeof producto.stock !== 'undefined' ? Number(producto.stock) : item.cantidad;
+      } else {
+        maxStock = typeof producto.stock !== 'undefined' ? Number(producto.stock) : item.cantidad;
+      }
+    }
+
+    const disabledPlus = (Number(item.cantidad) >= maxStock) ? 'disabled' : '';
+
     const li = document.createElement('li');
     li.className = 'carrito-item';
     li.innerHTML = `
@@ -66,7 +82,7 @@ function renderCartPage() {
         <div>
           <button class="cant-minus" data-id="${item.id}" data-variacion="${item.variacion || ''}">-</button>
           <span class="cantidad">${item.cantidad}</span>
-          <button class="cant-plus" data-id="${item.id}" data-variacion="${item.variacion || ''}">+</button>
+          <button class="cant-plus" data-id="${item.id}" data-variacion="${item.variacion || ''}" ${disabledPlus}>+</button>
         </div>
         <div>Subtotal: $${Number(item.subtotal).toFixed(2)}</div>
         <div><button class="eliminar-item" data-id="${item.id}" data-variacion="${item.variacion || ''}">Eliminar</button></div>
@@ -77,7 +93,6 @@ function renderCartPage() {
 
   const total = carritoLocal.reduce((sum, it) => sum + Number(it.subtotal || 0), 0);
   if (totalEl) totalEl.textContent = `Total: $${total.toFixed(2)}`;
-  if (descuentoEl) descuentoEl.textContent = (window.porcentajeDescuento ? `Descuento aplicado: ${window.porcentajeDescuento}%` : '');
 }
 
 // pequeño helper

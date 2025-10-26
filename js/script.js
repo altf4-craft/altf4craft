@@ -182,11 +182,9 @@ document.getElementById('form-datos').addEventListener('submit', async function 
 
 function cambiarCantidad(id, cambio = 0, variacion = null) {
   if (!id) return;
-  // asegurar tipos numéricos
   const delta = Number(cambio) || 0;
   if (delta === 0) return;
 
-  // localizar item
   const idStr = String(id);
   const idx = carrito.findIndex(it => String(it.id) === idStr && (variacion == null || it.variacion === variacion));
   if (idx === -1) {
@@ -199,12 +197,40 @@ function cambiarCantidad(id, cambio = 0, variacion = null) {
 
   const item = carrito[idx];
 
-  // calcular nueva cantidad con límites razonables
-  const nuevaCantidad = Math.max(0, Math.min(9999, Number(item.cantidad) + delta));
+  // Determinar stock máximo del producto/variación
+  let maxStock = Infinity;
+  const producto = (window.productos || []).find(p => String(p.id) === idStr || String(p.sku) === idStr || String(p.codigo) === idStr);
+  if (producto) {
+    if (variacion != null) {
+      const v = (producto.variaciones || []).find(x => String(x.id) === String(variacion) || String(x.nombre) === String(variacion));
+      if (v && typeof v.stock !== 'undefined') maxStock = Number(v.stock);
+    }
+    if (!isFinite(maxStock) && typeof producto.stock !== 'undefined') {
+      maxStock = Number(producto.stock);
+    }
+  }
+
+  const currentQty = Number(item.cantidad) || 0;
+  // si delta > 0, respetar maxStock
+  let nuevaCantidad;
+  if (delta > 0 && isFinite(maxStock)) {
+    nuevaCantidad = Math.min(maxStock, currentQty + delta);
+  } else {
+    // para decrementos o stock infinito, usar límites generales
+    nuevaCantidad = Math.max(0, Math.min(9999, currentQty + delta));
+  }
+
   if (!Number.isFinite(nuevaCantidad)) return;
 
+  // si no cambia (p. ej. ya estamos en el máximo) notificar
+  if (nuevaCantidad === currentQty) {
+    if (delta > 0 && typeof mostrarAlerta === 'function') {
+      mostrarAlerta('No se puede agregar más unidades: stock agotado o límite alcanzado', 'warning');
+    }
+    return;
+  }
+
   if (nuevaCantidad === 0) {
-    // eliminar ítem
     carrito.splice(idx, 1);
   } else {
     item.cantidad = nuevaCantidad;
