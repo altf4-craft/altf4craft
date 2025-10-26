@@ -53,70 +53,6 @@ function mostrarProductos(listaProductos) {
   });
 }
 
-// Cambia la función agregarAlCarrito para aceptar cantidadManual
-function agregarAlCarrito(id, cantidadManual, variacionSeleccion = null) {
-  let producto = productos.find(p => p.id === id);
-  let nombre = producto.nombre;
-  let precio = producto.precio;
-  let stock = producto.stock;
-  let idCarrito = id;
-
-  // Si hay variación, ajusta los datos
-  if (
-    variacionSeleccion &&
-    producto.variaciones &&
-    producto.variaciones.length > 0
-  ) {
-    const variacion = producto.variaciones.find(v =>
-      v.nombre === variacionSeleccion.nombre
-    );
-    if (variacion) {
-      nombre += ` (${variacion.nombre})`;
-      stock = variacion.stock || variacion.Stock;
-      idCarrito = `${id}-${variacion.nombre}`;
-      if (variacion.precio) precio = variacion.precio;
-    }
-  }
-
-  let cantidad = cantidadManual !== undefined
-    ? cantidadManual
-    : parseInt(document.getElementById('cantidad-' + id).value);
-
-  if (!producto || cantidad <= 0 || isNaN(cantidad)) {
-    alert("Cantidad inválida o producto no encontrado");
-    return;
-  }
-
-  // Busca por idCarrito (id+variacion)
-  const productoExistente = carrito.find(item => item.id === idCarrito);
-
-  if (productoExistente) {
-    if (productoExistente.cantidad + cantidad > stock) {
-      alert('No hay suficiente stock disponible');
-      return;
-    }
-    productoExistente.cantidad += cantidad;
-    productoExistente.precio = precio;
-    productoExistente.subtotal = productoExistente.cantidad * precio;
-  } else {
-    if (cantidad > stock) {
-      alert('No hay suficiente stock disponible');
-      return;
-    }
-    carrito.push({
-      id: idCarrito,
-      nombre: nombre,
-      precio: precio,
-      cantidad: cantidad,
-      subtotal: precio * cantidad
-    });
-  }
-
-  guardarCarrito();
-  actualizarCarrito();
-  mostrarAlerta();
-}
-
 function eliminarDelCarrito(id) {
   carrito = carrito.filter(item => item.id !== id);
   guardarCarrito();
@@ -184,7 +120,10 @@ document.getElementById('form-datos').addEventListener('submit', async function 
   formData.forEach((valor, clave) => datos[clave] = valor);
 
   if (carrito.length === 0) {
-    alert("Tu carrito está vacío.");
+    if (typeof mostrarAlerta === 'function') {
+      mostrarAlerta("Tu carrito está vacío.", "error");
+    }
+    e.preventDefault();
     return;
   }
 
@@ -280,6 +219,7 @@ function cambiarCantidad(id, cambio) {
 
   guardarCarrito();
   actualizarCarrito();
+  mostrarAlerta();
 }
 
 
@@ -287,13 +227,22 @@ function guardarCarrito() {
   localStorage.setItem('carrito', JSON.stringify(carrito));
 }
 
-function mostrarAlerta() {
+// Mostrar alerta flotante (mensaje corto, auto-hide)
+function mostrarAlerta(message = '¡Producto agregado al carrito!', type = 'success') {
   const alerta = document.getElementById('alerta');
+  if (!alerta) return;
+  alerta.textContent = message;
   alerta.style.display = 'block';
+  // color inline según tipo (usa tu CSS si prefieres clases)
+  alerta.style.backgroundColor = type === 'error' ? '#e64a4a' : '#cfa2d7';
+  // auto-hide
   setTimeout(() => {
-    alerta.style.display = 'none';
-  }, 1500);
+    if (alerta) alerta.style.display = 'none';
+  }, 2000);
 }
+
+// Hacer accesible globalmente si algún script lo llama como window.mostrarAlerta
+window.mostrarAlerta = mostrarAlerta;
 
 function abrirModal() {
   document.getElementById('modal-carrito').style.display = 'block';
