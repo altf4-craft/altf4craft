@@ -1,4 +1,3 @@
-// Renderiza el carrito en cart.html y conecta controles con las funciones globales
 document.addEventListener('DOMContentLoaded', () => {
   renderCartPage();
 
@@ -39,7 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
   listaEl.addEventListener('click', onCartClick);
 });
 
-// Reemplaza/usa esta función para renderizar la página de checkout/carrito
+
 function renderCartPage() {
   const listaEl = document.getElementById('lista-carrito');
   const totalEl = document.getElementById('total');
@@ -50,47 +49,29 @@ function renderCartPage() {
   const carritoLocal = JSON.parse(localStorage.getItem('carrito')) || [];
   listaEl.innerHTML = '';
 
-  // contenedor principal con dos columnas
-  const grid = document.createElement('div');
-  grid.className = 'checkout-grid';
-
-  // columna izquierda (formulario de datos del cliente)
-  const leftCol = document.createElement('div');
-  leftCol.className = 'checkout-left';
-
-  // intentar reubicar el form existente (#form-datos) dentro de la izquierda
-  const existingForm = document.getElementById('form-datos');
-  if (existingForm) {
-    // mover el formulario al leftCol (se quita de su posición previa)
-    leftCol.appendChild(existingForm);
-  } else {
-    // fallback: si no existe form-datos, mostrar info básica
-    const fallback = document.createElement('div');
-    fallback.innerHTML = '<h3>Datos del cliente</h3><p>Formulario no encontrado (ID: form-datos).</p>';
-    leftCol.appendChild(fallback);
+  if (!carritoLocal.length) {
+    listaEl.innerHTML = '<li>El carrito está vacío. <a href="index.html">Volver al catálogo</a></li>';
+    if (totalEl) totalEl.textContent = 'Total: $0';
+    if (descuentoEl) descuentoEl.textContent = '';
+    return;
   }
 
-  // columna derecha (resumen del carrito)
-  const rightCol = document.createElement('aside');
-  rightCol.className = 'checkout-right';
-
-  // cabecera
-  const header = document.createElement('div');
-  header.className = 'cart-header';
-  const h = document.createElement('h3');
-  h.textContent = 'Tu carrito';
-  header.appendChild(h);
-  const count = document.createElement('div');
-  count.className = 'cart-count';
-  count.textContent = `(${carritoLocal.length})`;
-  header.appendChild(count);
-  rightCol.appendChild(header);
-
-  // items
-  const ul = document.createElement('ul');
-  ul.className = 'cart-items';
-
   carritoLocal.forEach(item => {
+    // encontrar producto para saber el stock
+    const producto = (window.productos || []).find(p => String(p.id) === String(item.id));
+    let maxStock = item.cantidad; // por defecto permitir la cantidad actual
+    if (producto) {
+      // buscar stock en variación si existe
+      if (item.variacion) {
+        const v = (producto.variaciones || []).find(x => String(x.id) === String(item.variacion) || String(x.nombre) === String(item.variacion));
+        if (v && typeof v.stock !== 'undefined') maxStock = Number(v.stock);
+        else maxStock = typeof producto.stock !== 'undefined' ? Number(producto.stock) : item.cantidad;
+      } else {
+        maxStock = typeof producto.stock !== 'undefined' ? Number(producto.stock) : item.cantidad;
+      }
+    }
+
+    const disabledPlus = (Number(item.cantidad) >= maxStock) ? 'disabled' : '';
     const li = document.createElement('li');
     li.className = 'carrito-item';
     li.innerHTML = `
@@ -100,7 +81,7 @@ function renderCartPage() {
         <div>
           <button class="cant-minus" data-id="${item.id}" data-variacion="${item.variacion || ''}">-</button>
           <span class="cantidad">${item.cantidad}</span>
-          <button class="cant-plus" data-id="${item.id}" data-variacion="${item.variacion || ''}">+</button>
+          <button class="cant-plus" data-id="${item.id}" data-variacion="${item.variacion || ''}" ${disabledPlus}>+</button>
         </div>
         <div>Subtotal: $${Number(item.subtotal).toFixed(2)}</div>
         <div><button class="eliminar-item" data-id="${item.id}" data-variacion="${item.variacion || ''}">Eliminar</button></div>
@@ -111,10 +92,9 @@ function renderCartPage() {
 
   const total = carritoLocal.reduce((sum, it) => sum + Number(it.subtotal || 0), 0);
   if (totalEl) totalEl.textContent = `Total: $${total.toFixed(2)}`;
-  if (descuentoEl) descuentoEl.textContent = (window.porcentajeDescuento ? `Descuento aplicado: ${window.porcentajeDescuento}%` : '');
+
 }
 
 // pequeño helper
 function escapeHtml(str = '') {
   return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
-}
