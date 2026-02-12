@@ -1,11 +1,15 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Carrito - Alt F4 Craft</title>
     <link rel="stylesheet" href="css/style.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="css/stylecart.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+    />
   </head>
   <body>
     <header class="site-header">
@@ -25,31 +29,40 @@
       <div id="cupon-container" class="cupon-section">
         <label for="codigo-cupon">¿Tenés un cupón de descuento?</label>
         <div class="cupon-inputs">
-          <input type="text" id="codigo-cupon" placeholder="Ingresá tu código" />
+          <input
+            type="text"
+            id="codigo-cupon"
+            placeholder="Ingresá tu código"
+          />
           <button id="aplicar-cupon">Aplicar</button>
         </div>
         <p id="mensaje-cupon"></p>
       </div>
 
-      <p id="descuento-aplicado" style="color:#e8499a;font-weight:bold"></p>
+      <p id="descuento-aplicado"></p>
       <p id="total">Total: $0</p>
 
       <section id="formulario-cliente">
         <h2>Datos del cliente</h2>
-        <form id="form-datos" style="display:flex;flex-direction:column;gap:10px;max-width:600px;">
+        <form id="form-datos">
           <div>
             <label>Nombre completo</label>
             <input name="nombre" placeholder="Ej: Alison Pérez" required />
           </div>
 
-          <div>
+          <div id="campoDNI">
             <label>DNI</label>
             <input name="dni" placeholder="Ej: 30111222" required />
           </div>
 
           <div>
             <label>Email</label>
-            <input name="email" type="email" placeholder="Ej: alison@email.com" required />
+            <input
+              name="email"
+              type="email"
+              placeholder="Ej: alison@email.com"
+              required
+            />
           </div>
 
           <div>
@@ -66,9 +79,127 @@
             </select>
           </div>
 
-          <div>
+          <div id="tipoEnvioBloque" style="display: none">
+            <label for="tipoEnvio">Tipo de envío:</label>
+            <select name="tipoEnvio" id="tipoEnvio">
+              <option value="">Seleccione una opción</option>
+              <option value="A sucursal">A sucursal</option>
+              <option value="A domicilio">A domicilio</option>
+            </select>
+          </div>
+
+          <div id="datosEnvio" style="display: none; margin-top: 10px">
+            <h4>Datos de envío</h4>
+
+            <div>
+              <label for="envioPor">Envío por:</label>
+              <select id="envioPor" name="envioPor">
+                <option value="">Seleccionar</option>
+                <option value="Correo Argentino">Correo Argentino</option>
+                <option value="Correo Andreani">Correo Andreani</option>
+                <option value="E-pick">E-pick</option>
+              </select>
+            </div>
+
+            <div id="camposDireccionBloque" style="display: none">
+              <div>
+                <label for="calle">Calle:</label>
+                <input
+                  type="text"
+                  name="calle"
+                  id="calle"
+                  placeholder="Ej: Av. Siempre Viva"
+                />
+              </div>
+
+              <div>
+                <label for="numero">Número:</label>
+                <input
+                  type="text"
+                  name="numero"
+                  id="numero"
+                  placeholder="Ej: 742"
+                />
+              </div>
+
+              <div>
+                <label for="piso">Piso:</label>
+                <input
+                  type="text"
+                  name="piso"
+                  id="piso"
+                  placeholder="Opcional"
+                />
+              </div>
+
+              <div>
+                <label for="departamento">Departamento:</label>
+                <input
+                  type="text"
+                  name="departamento"
+                  id="departamento"
+                  placeholder="Opcional"
+                />
+              </div>
+
+              <div>
+                <label for="entreCalles">Entre calles:</label>
+                <input
+                  type="text"
+                  name="entreCalles"
+                  id="entreCalles"
+                  placeholder="Ej: Belgrano y San Martín (Opcional)"
+                />
+              </div>
+
+              <div>
+                <label for="provincia">Provincia:</label>
+                <input
+                  type="text"
+                  name="provincia"
+                  id="provincia"
+                  placeholder="Ej: Buenos Aires"
+                />
+              </div>
+
+              <div>
+                <label for="localidad">Localidad:</label>
+                <input
+                  type="text"
+                  name="localidad"
+                  id="localidad"
+                  placeholder="Ej: La Plata"
+                />
+              </div>
+
+              <div>
+                <label for="codigoPostal">Código Postal:</label>
+                <input
+                  type="text"
+                  name="codigoPostal"
+                  id="codigoPostal"
+                  placeholder="Ej: 1900"
+                />
+              </div>
+
+              <div>
+                <label for="comentarios">Comentarios:</label>
+                <textarea
+                  name="comentarios"
+                  id="comentarios"
+                  rows="3"
+                  placeholder="Detalles adicionales sobre la entrega"
+                ></textarea>
+              </div>
+            </div>
+          </div>
+
+          <div id="campoQuienRecibe" style="display: none">
             <label>¿Quién recibe?</label>
-            <input name="recibe" placeholder="Ej: Tu nombre o el de alguien más" required />
+            <input
+              name="recibe"
+              placeholder="Ej: Tu nombre o el de alguien más"
+            />
           </div>
 
           <div>
@@ -90,8 +221,8 @@
           <div>
             <label>¿Factura C?</label>
             <select name="factura" required>
-              <option value="Sí">Sí</option>
               <option value="No">No</option>
+              <option value="Sí">Sí</option>
             </select>
           </div>
 
@@ -103,10 +234,10 @@
     <footer class="site-footer"></footer>
 
     <!-- Scripts: carga carrito.js (enviarPedido), script.js (lógica general), page-cart.js (render específico) -->
-    <script src="js/carrito.js"></script>
-    <script src="js/script.js"></script>
-    <script src="js/page-cart.js"></script>
-    <script src="js/page-product.js"></script>
-    <script src="js/cupones.js"></script>
+    <script src="js/carrito.js" defer></script>
+    <script src="js/script.js" defer></script>
+    <script src="js/form-helpers.js" defer></script>
+    <script src="js/page-cart.js" defer></script>
+    <script src="js/cupones.js" defer></script>
   </body>
 </html>

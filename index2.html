@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AltF4 Craft | Papelería y Acrílicos Personalizado para Emprendedores</title>
+    
+    <!-- Metadatos de SEO Básicos -->
+    <meta name="description" content="Creamos productos de papeleria y acrilicos personalizados por cantidad para emprendedores e ilustradores. Dale identidad a tus ideas con Alt F4 Craft..." />
+    <meta name="keywords" content="merchandising, personalizado, emprendedores, llaveros acrílicos, stickers personalizados, papelería, Alt F4 Craft, Argentina, standees, charms, photocards" />
+    <meta name="author" content="AltF4 Craft" />
+    <meta name="robots" content="index, follow" />
+    
+    <!-- Configuración Open Graph (para Redes Sociales como Facebook/WhatsApp) -->
+    <meta property="og:title" content="AltF4 Craft | Papelería y Acrílicos Personalizado para Emprendedores" />
+    <meta property="og:description" content="Creamos productos de papeleria y acrilicos personalizados por cantidad para emprendedores e ilustradores. Dale identidad a tus ideas con Alt F4 Craft..." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://altf4-craft.github.io/altf4-craft/" />
+    <meta property="og:image" content="https://altf4-craft.github.io/altf4-craft/img/Logo_AltF4.png" /> 
+    
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="icon" href="img/icon.png" />
+
+    <!-- Datos Estructurados JSON-LD (Schema.org para Google) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "AltF4 Craft",
+      "url": "https://altf4-craft.github.io/altf4-craft/",
+      "logo": "https://altf4-craft.github.io/altf4-craft/img/Logo_AltF4.png",
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "telephone": "+54-9-11-2611-6298",
+        "contactType": "customer service",
+        "areaServed": "AR",
+        "availableLanguage": ["es"]
+      },
+      "sameAs": [
+        "https://www.instagram.com/altf4.craft/"
+      ]
+    }
+    </script>
+</head>
+  <body>
+    <!-- HEADER -->
+    <header class="site-header">
+      <div class="logo-container">
+        <img src="img/Logo_AltF4.png" alt="Logo Alt F4 Craft" class="logo" />
+        <h1>AltF4 Craft</h1>
+      </div>
+      <a href="index.html">Inicio</a>
+      <a href="faq.html">Preguntas Frecuentes</a>
+      <div class="header-controls">
+        <!--<h1>Catálogo</h1>-->
+
+        <input
+          type="text"
+          id="buscador"
+          placeholder="Buscar productos..."
+          onkeyup="filtrarProductos()"
+        />
+
+        <select id="filtro" onchange="ordenarProductos()">
+          <option value="default">Ordenar por</option>
+          <option value="precio-asc">Precio menor a mayor</option>
+          <option value="precio-desc">Precio mayor a menor</option>
+          <option value="nombre">Nombre (A-Z)</option>
+        </select>
+
+        <div id="carrito-icono" onclick="abrirModal()">
+          🛒 <span id="contador-carrito">0</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Banner Carrusel -->
+    <div class="banner-carrusel">
+      <button class="banner-flecha" id="banner-prev">&#10094;</button>
+      <div class="banner-slides">
+        <div class="banner-slide active">
+          <img src="img/4.png" alt="Promo 1" />
+          <!--<div class="banner-texto">¡Bienvenida a Alt F4 Craft!</div>-->
+        </div>
+        <div class="banner-slide">
+          <img src="img/cronogramaacrilicos.png" alt="Promo 2">
+          <!--<div class="banner-texto">¡Bienvenida a Alt F4 Craft!</div>-->
+        </div>
+        <div class="banner-slide">
+          <img src="img/3.png" alt="Promo 3" />
+          <!--<div class="banner-texto">¡Bienvenida a Alt F4 Craft!</div>-->
+        </div>
+      </div>
+      <button class="banner-flecha" id="banner-next">&#10095;</button>
+      <div class="banner-puntos" id="banner-puntos"></div>
+    </div>
+
+    <div id="catalogo" class="catalogo"></div>
+
+    <!-- Modal del Carrito -->
+
+    <div id="modal-carrito" class="modal">
+      <div class="modal-contenido">
+        <span class="cerrar" onclick="cerrarModal()">&times;</span>
+        <h2>Carrito</h2>
+        <ul id="lista-carrito"></ul>
+        <div id="cupon-container" class="cupon-section">
+          <label for="codigo-cupon">¿Tenés un cupón de descuento?</label>
+          <div class="cupon-inputs">
+            <input
+              type="text"
+              id="codigo-cupon"
+              placeholder="Ingresá tu código"
+            />
+            <button id="aplicar-cupon">Aplicar</button>
+          </div>
+          <p id="mensaje-cupon"></p>
+        </div>
+        <p
+          id="descuento-aplicado"
+          style="color: #e8499a; font-weight: bold"
+        ></p>
+        <p id="total">Total: $0</p>
+        <!-- formulario-datos.html (o incluí este código en tu index.html antes del botón de enviar por WhatsApp) -->
+        <section id="formulario-cliente">
+          <h2>Datos del cliente</h2>
+          <form
+            id="form-datos"
+            style="display: flex; flex-wrap: wrap; gap: 10px"
+          >
+            <div>
+              <label>Nombre completo</label>
+              <input name="nombre" placeholder="Ej: Alison Pérez" required />
+            </div>
+
+            <div id="campoDNI">
+              <label>DNI</label>
+              <input name="dni" placeholder="Ej: 30111222" required />
+            </div>
+
+            <div>
+              <label>Email</label>
+              <input
+                name="email"
+                type="email"
+                placeholder="Ej: alison@email.com"
+                required
+              />
+            </div>
+
+            <div>
+              <label>Celular</label>
+              <input name="celular" placeholder="Ej: 1155552222" required />
+            </div>
+
+            <div>
+              <label>Método de envío</label>
+              <select name="envio" required>
+                <option value="Punto de retiro">Punto de retiro</option>
+                <option value="Evento">Evento</option>
+                <option value="Envío por correo">Envío por correo</option>
+              </select>
+            </div>
+            
+            <div id="datosEnvio" style="display: none; margin-top: 10px">
+      
+              <h4>Datos de envío</h4>
+
+            
+              <div>
+                <label for="envioPor">Envío por:</label>
+                <select id="envioPor" name="envioPor">
+                  <option value="">Seleccionar</option>
+                  <option value="Correo Argentino">Correo Argentino</option>
+                  <option value="Correo Andreani">Correo Andreani</option>
+                  <option value="E-pick">E-pick</option>
+                </select>
+              </div>
+
+              <div id="tipoEnvioBloque" style="display: none">
+              <label for="tipoEnvio">Tipo de envío:</label>
+              <select name="tipoEnvio" id="tipoEnvio">
+                <option value="">Seleccione una opción</option>
+                <option value="A sucursal">A sucursal</option>
+                <option value="A domicilio">A domicilio</option>
+              </select>
+            
+            </div>
+            
+              <div id="camposDireccionBloque" style="display: none">
+                <div>
+                  <label for="calle">Calle:</label>
+                  <input
+                    type="text"
+                    name="calle"
+                    id="calle"
+                    placeholder="Ej: Av. Siempre Viva"
+                  />
+                </div>
+
+                <div>
+                  <label for="numero">Número:</label>
+                  <input
+                    type="text"
+                    name="numero"
+                    id="numero"
+                    placeholder="Ej: 742"
+                  />
+                </div>
+
+                <div>
+                  <label for="piso">Piso:</label>
+                  <input
+                    type="text"
+                    name="piso"
+                    id="piso"
+                    placeholder="Opcional"
+                  />
+                </div>
+
+                <div>
+                  <label for="departamento">Departamento:</label>
+                  <input
+                    type="text"
+                    name="departamento"
+                    id="departamento"
+                    placeholder="Opcional"
+                  />
+                </div>
+
+                <div>
+                  <label for="entreCalles">Entre calles:</label>
+                  <input
+                    type="text"
+                    name="entreCalles"
+                    id="entreCalles"
+                    placeholder="Ej: Belgrano y San Martín (Opcional)"
+                  />
+                </div>
+
+                <div>
+                  <label for="provincia">Provincia:</label>
+                  <input
+                    type="text"
+                    name="provincia"
+                    id="provincia"
+                    placeholder="Ej: Buenos Aires"
+                  />
+                </div>
+
+                <div>
+                  <label for="localidad">Localidad:</label>
+                  <input
+                    type="text"
+                    name="localidad"
+                    id="localidad"
+                    placeholder="Ej: La Plata"
+                  />
+                </div>
+
+                <div>
+                  <label for="codigoPostal">Código Postal:</label>
+                  <input
+                    type="text"
+                    name="codigoPostal"
+                    id="codigoPostal"
+                    placeholder="Ej: 1900"
+                  />
+                </div>
+
+                <div>
+                  <label for="comentarios">Comentarios:</label>
+                  <textarea
+                    name="comentarios"
+                    id="comentarios"
+                    rows="3"
+                    placeholder="Detalles adicionales sobre la entrega"
+                  ></textarea>
+                </div>
+              </div>
+            
+            </div>
+            <div>
+              <label>¿Quién recibe?</label>
+              <input
+                name="recibe"
+                placeholder="Ej: Tu nombre o el de alguien más"
+                required
+              />
+            </div>
+
+            <div>
+              <label>Método de pago</label>
+              <select name="pago" required>
+                <option value="Transferencia">Transferencia</option>
+                <option value="Link de pago">Link de pago</option>
+              </select>
+            </div>
+
+            <div>
+              <label>¿Autoriza publicación?</label>
+              <select name="publicidad" required>
+                <option value="Sí">Sí</option>
+                <option value="No">No</option>
+              </select>
+            </div>
+
+            <div>
+              <label>¿Factura C?</label>
+              <select name="factura" required>
+                <option value="No">No</option>
+                <option value="Sí">Sí</option>
+              </select>
+            </div>
+
+            <button type="submit">Enviar pedido por WhatsApp</button>
+          </form>
+        </section>
+      </div>
+    </div>
+
+    <div id="alerta" class="alerta" style="display: none">
+      Producto agregado!
+    </div>
+
+    <div id="modal-detalle" class="modal">
+      <div class="modal-contenido">
+        <span class="cerrar" onclick="cerrarDetalle()">&times;</span>
+        <div id="detalle-producto"></div>
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="site-footer">
+      <p>&copy; 2025 Alt F4 Craft - Todos los derechos reservados.</p>
+      <p>
+        Síguenos en:
+        <a href="https://www.instagram.com/altf4.craft/" target="_blank"
+          >Instagram</a
+        >
+
+        <a href="http://qr.afip.gob.ar/?qr=pPXvD53IgdISS11ZvRZf8A,," target="_F960AFIPInfo"><img src="https://www.afip.gob.ar/images/f960/DATAWEB.jpg" border="0"></a>
+        <!--|
+     <a href="#" target="_blank">Facebook</a> |
+    <a href="#" target="_blank">TikTok</a> -->
+      </p>
+    </footer>
+
+    <script src="js/script.js"></script>
+    <script src="js/cupones.js"></script>
+  </body>
+</html>

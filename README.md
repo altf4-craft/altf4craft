@@ -42,3 +42,7 @@ altf4craft
 
 ## Contributing
 Contributions are welcome! Please submit a pull request or open an issue for any suggestions or improvements.
+
+## Proximas mejoras
+- Campo ¿Quién recibe?, solo desplegar si se elegi la opcion: Punto de retiro o Evento del Método de envío.
+- Desplegar campos para solicitar los datos de envio, cuando se seleccione la opcion Envío por correo del Método de envío.

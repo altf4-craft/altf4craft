@@ -1,0 +1,151 @@
+/* --- 1. CONFIGURACIÓN GLOBAL Y TIPOGRAFÍA (Ajustar si es necesario) --- */
+:root {
+  /* Paleta basada en el logo y el botón "Enviar pedido" */
+  --color-primary: #e8499a; /* Rosa Fuerte/Morado de acento */
+  --color-secondary: #a988bc; /* Morado más claro (fondo del formulario) */
+  --color-background: #f8f8f8; /* Fondo de la página */
+  --color-text: #333333; /* Color de texto oscuro */
+  --color-border: #cccccc;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Fuente moderna y legible */
+  background-color: var(--color-background);
+}
+
+/* --- 2. LAYOUT DEL FORMULARIO Y CONTENEDORES --- */
+
+/* Estilo para la sección del formulario */
+#formulario-cliente {
+  background-color: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08); /* Sombra suave para que destaque */
+  margin: 30px 0;
+  max-width: 700px; /* Ancho máximo para mejor lectura */
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#form-datos {
+  /* Sobrescribir estilos inline del HTML para mejor gestión en CSS */
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 20px !important; /* Aumentar el espaciado entre grupos de campos */
+  max-width: none !important;
+}
+
+/* Estilo para cada grupo de label + input/select */
+#form-datos > div {
+  display: flex;
+  flex-direction: column;
+}
+
+/* --- 3. MEJORA VISUAL DE LOS CAMPOS DE ENTRADA (INPUTS y SELECTS) --- */
+
+label {
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: var(--color-text);
+  font-size: 0.95em;
+}
+
+input[type="text"],
+input[type="email"],
+select,
+textarea {
+  /* ¡CAMBIO AQUÍ! Añadir el ancho al 100% */
+  width: 100%; 
+  box-sizing: border-box; /* Asegura que el padding no aumente el ancho total */
+  padding: 10px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  font-size: 1em;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  background-color: #ffffff;
+}
+
+/* Efecto de enfoque (focus) para accesibilidad y diseño */
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(232, 73, 154, 0.2); /* Sombra ligera con el color de acento */
+  outline: none; /* Quitar el borde de enfoque por defecto del navegador */
+}
+
+/* Estilo del textarea */
+textarea {
+  resize: vertical; /* Permitir solo redimensionamiento vertical */
+}
+
+
+/* --- 4. OPTIMIZACIÓN DEL BLOQUE DE DATOS DE ENVÍO (Múltiples campos en línea) --- */
+
+#datosEnvio {
+  padding: 20px;
+  border: 1px dashed var(--color-secondary); 
+  border-radius: 8px;
+  background-color: #fffafa; 
+}
+
+/* Aplicar Grid al contenedor de dirección */
+#camposDireccionBloque {
+  display: grid;
+  /* Creamos columnas de tamaño flexible para que se ajusten bien */
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); 
+  gap: 15px; 
+  margin-top: 15px;
+}
+
+/* Asegurar que el campo de Comentarios ocupe todo el ancho */
+/* Usamos el ID específico del textarea para más precisión */
+#camposDireccionBloque > div:has(#comentarios) {
+  /* Hacemos que ocupe desde la primera columna (1) hasta la última (-1) */
+  grid-column: 1 / -1; 
+}
+
+/* Si tu HTML tiene labels y inputs dentro de divs, esta regla aplica */
+#camposDireccionBloque > div {
+  display: flex;
+  flex-direction: column;
+}
+
+/* --- 5. ESTILO DEL BOTÓN DE ENVÍO --- */
+
+#form-datos button[type="submit"] {
+  background-color: var(--color-primary);
+  color: white;
+  border: none;
+  padding: 12px 25px; /* Reducir el padding vertical para hacerlo menos alto */
+  border-radius: 8px;
+  font-size: 1em; /* Reducir ligeramente la fuente */
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background-color 0.3s, transform 0.2s;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  /* ¡CAMBIO AQUÍ! Limitar el ancho del botón a un máximo. */
+  max-width: 300px; 
+  align-self: center; /* Centrar el botón dentro del Flexbox de #form-datos */
+}
+
+#form-datos button[type="submit"]:hover {
+  background-color: #c93b7a; 
+  transform: translateY(-2px); 
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* --- 6. ESTILOS DE LA CABECERA DEL FORMULARIO --- */
+
+h2, h4 {
+  color: #5d3a77; /* Color oscuro que complementa el morado */
+  border-bottom: 2px solid var(--color-secondary);
+  padding-bottom: 5px;
+  margin-bottom: 20px;
+}
+
+h4 {
+  font-size: 1.1em;
+  margin-bottom: 10px;
+}

@@ -399,3 +399,16 @@ function renderFooter() {
   });
 }
 
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('[data-action]');
+  if (!btn) return;
+  const action = btn.getAttribute('data-action');
+  if (action === 'ver-detalle') {
+    const id = btn.getAttribute('data-id');
+    mostrarDetalle(id);
+  } else if (action === 'add-cart') {
+    const id = btn.getAttribute('data-id');
+    if (typeof window.agregarAlCarrito === 'function') window.agregarAlCarrito(id, 1);
+  }
+});
+
