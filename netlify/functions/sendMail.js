@@ -1,5 +1,5 @@
 // netlify/functions/sendMail.js
-import nodemailer from "nodemailer";
+const nodemailer = require("nodemailer");
 
 const CORS_HEADERS = {
   "Access-Control-Allow-Origin": "*",
@@ -8,7 +8,7 @@ const CORS_HEADERS = {
   "Content-Type": "application/json",
 };
 
-export async function handler(event) {
+exports.handler = async function(event) {
   // Manejar preflight OPTIONS
   if (event.httpMethod === "OPTIONS") {
     return {
@@ -100,4 +100,4 @@ export async function handler(event) {
       body: JSON.stringify({ message: "Error al enviar el correo: " + error.message }),
     };
   }
-}
+};

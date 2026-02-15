@@ -8,62 +8,25 @@
     "imagen": "img/charm_personalizado.png",
     "imagenes": ["img/charms.jpeg"],
     "descripcion": "📱✨ Phone Charms de acrílico personalizados ✨📱\n\nEn Alt F4 Craft hacemos Phone Charms de acrílico de 2 y 3 cm, ideales para que emprendedores y marcas ofrezcan su propia merch original. 💼✨\n\n🔹 Características del producto:\n✔️ Tamaño: 2 o 3 cm\n✔️ Acrílico de 3 mm de espesor, liviano y resistente\n✔️ Incluye cordón listo para colocar en celulares, bolsos o estuches\n✔️ Personalizables con el diseño que nos envíes (logo, ilustración, personaje, etc.)\n\n💡 Ventajas para tu emprendimiento:\n✔️ Producción por cantidad (consultá mínimo de unidades)\n✔️ Producto versátil: merchandising, souvenirs, giveaways o ventas en tu tienda online\n✔️ Terminación profesional y de alta calidad\n✔️ Posibilidad de combinar con otros productos (llaveros, standees, stickers) para armar sets completos\n\n📦 Envíos a todo el país.\n🗓️ Producción según cronograma (se anuncia cada 15 días).",
+    "descuentosPorCantidad": [
+      { "cantidad": 5, "descuento": 10 },
+      { "cantidad": 10, "descuento": 15 },
+      { "cantidad": 20, "descuento": 20 }
+    ],
     "variaciones": [
       {
-        "id": "x1 unidad (2 CM)",
-        "nombre": "x1 unidad (2 CM)",
+        "id": "2 CM",
+        "nombre": "2 CM",
         "imagen": "img/charm_personalizado.png",
-        "stock": 5,
+        "stock": 50,
         "precio": 2500
       },
       {
-        "id": "x5 unidades (2 CM)",
-        "nombre": "x5 unidades (2 CM)",
+        "id": "3 CM",
+        "nombre": "3 CM",
         "imagen": "img/charm_personalizado.png",
-        "stock": 5,
-        "precio": 8800
-      },
-      {
-        "id": "x10 unidades (2 CM)",
-        "nombre": "x10 unidades (2 CM)",
-        "imagen": "img/charm_personalizado.png",
-        "stock": 5,
-        "precio": 14300
-      },
-      {
-        "id": "x30 unidades (2 CM)",
-        "nombre": "x5 unidades (2 CM)",
-        "imagen": "img/charm_personalizado.png",
-        "stock": 5,
-        "precio": 39600
-      },
-      {
-        "id": "x1 unidad (3 CM)",
-        "nombre": "x1 unidad (3 CM)",
-        "imagen": "img/charm_personalizado.png",
-        "stock": 5,
+        "stock": 50,
         "precio": 3400
-      },
-      {
-        "id": "x5 unidades (3 CM)",
-        "nombre": "x5 unidades (3 CM)",
-        "imagen": "img/charm_personalizado.png",
-        "stock": 5,
-        "precio": 13200
-      },
-      {
-        "id": "x10 unidades (3 CM)",
-        "nombre": "x10 unidades (3 CM)",
-        "imagen": "img/charm_personalizado.png",
-        "stock": 5,
-        "precio": 19800
-      },
-      {
-        "id": "x30 unidades (3 CM)",
-        "nombre": "x30 unidades (3 CM)",
-        "imagen": "img/charm_personalizado.png",
-        "stock": 5,
-        "precio": 49500
       }
     ]
   },
@@ -75,6 +38,11 @@
     "stock": 11,
     "imagen": "img/llavero_personalizado.png",
     "imagenes": ["img/llaveros.jpeg", "img/llaveros2.jpeg"],
+    "descuentosPorCantidad": [
+      { "cantidad": 5, "descuento": 10 },
+      { "cantidad": 10, "descuento": 15 },
+      { "cantidad": 20, "descuento": 20 }
+    ],
     "descripcion": "🔑✨ Llavero acrílico personalizado ✨🔑\n\nEn Alt F4 Craft hacemos llaveros acrílicos de 4 y 5 cm, pensados especialmente para emprendedores y marcas que quieran ofrecer su propia merch con estilo único. 💼💖\n\n🔹 Características del producto:\n✔️ Tamaño: 4 o 5 cm\n✔️ Acrílico de 3 mm de espesor, resistente y duradero\n✔️ Incluye argolla sin fin listo para usar\n✔️ Personalizables con el diseño que nos envíes (logo, ilustración, personaje, etc.)\n\n💡 Ventajas para tu emprendimiento:\n✔️ Producción por cantidad (consultá mínimo de unidades)\n✔️ Perfectos para merchandising, souvenirs, giveaways o venta en tu tienda online\n✔️ Terminación profesional con alta fidelidad de color\n✔️ Podés combinarlos con otros productos (phone charms, standees, stickers) y armar packs exclusivos\n\n📦 Envíos a todo el país.\n🗓️ Producción según cronograma (se anuncia cada 15 días).",
     "variaciones": [
       {
@@ -143,6 +111,11 @@
     "stock": 10,
     "imagen": "img/standee_personalizado.jpg",
     "imagenes": ["img/standee.jpeg"],
+    "descuentosPorCantidad": [
+      { "cantidad": 3, "descuento": 10 },
+      { "cantidad": 5, "descuento": 15 },
+      { "cantidad": 10, "descuento": 20 }
+    ],
     "descripcion": "🎨✨ Standee acrílico personalizado ✨🎨\n\nEn Alt F4 Craft creamos standees de acrílico personalizados en dos tamaños (10 cm y 15 cm), ideales para que emprendedores y marcas ofrezcan merch original, vistosa y coleccionable. 💼🌟\n\n🔹 Características del producto:\n✔️ Tamaños disponibles: 10 cm o 15 cm\n✔️ Acrílico de 3 mm de espesor, resistente y con excelente acabado\n✔️ Base acrílica incluida para mantener el standee estable\n✔️ Personalizables con el diseño que nos envíes (logo, ilustración, personaje, etc.)\n\n💡 Ventajas para tu emprendimiento:\n✔️ Producción por cantidad (consultá mínimo de unidades)\n✔️ Producto ideal para coleccionistas, merchandising o promociones especiales\n✔️ Alta fidelidad de impresión y terminación profesional\n✔️ Combinables con otros productos (llaveros, phone charms, stickers) para sets completos\n\n📦 Envíos a todo el país.\n🗓️ Producción según cronograma (se anuncia cada 15 días).",
     "variaciones": [
       {
@@ -211,6 +184,11 @@
     "stock": 11,
     "imagen": "img/anotador personalizado.png",
     "imagenes": ["img/anotadores.jpeg"],
+    "descuentosPorCantidad": [
+      { "cantidad": 3, "descuento": 8 },
+      { "cantidad": 5, "descuento": 12 },
+      { "cantidad": 10, "descuento": 18 }
+    ],
     "descripcion": "📝✨ Anotador personalizado – 9,5 cm x 18 cm ✨📝\n\nEn Alt F4 Craft hacemos anotadores personalizados en tamaño práctico (9,5 cm x 18 cm), ideales para que emprendedores y marcas ofrezcan productos útiles, originales y con identidad propia. 💼🌟\n\n🔹 Características del producto:\n✔️ Tamaño: 9,5 cm x 18 cm\n✔️ Opciones disponibles: 30 hojas o 60 hojas\n✔️ Papel de calidad, ideal para escribir cómodamente\n✔️ Personalizables con tu diseño (logo, ilustración, branding, etc.)\n\n💡 Ventajas para tu emprendimiento:\n✔️ Producción por cantidad (consultá mínimo de unidades)\n✔️ Perfectos como merchandising, material corporativo, regalos o ventas en tu tienda\n✔️ Producto funcional y con terminación profesional\n✔️ Posibilidad de combinar con blocks de notas, stickers y otros ítems para armar kits\n\n📦 Envíos a todo el país.",
     "variaciones": [
       {
@@ -265,6 +243,11 @@
     "stock": 10,
     "imagen": "img/blocknotaspersonalizados.jpg",
     "imagenes": ["img/blocknotas.jpeg"],
+    "descuentosPorCantidad": [
+      { "cantidad": 3, "descuento": 8 },
+      { "cantidad": 5, "descuento": 12 },
+      { "cantidad": 10, "descuento": 18 }
+    ],
     "descripcion": "🗒️✨ Block de notas personalizado – 9 cm x 9 cm ✨🗒️\n\nEn Alt F4 Craft hacemos blocks de notas personalizados en tamaño 9 cm x 9 cm, prácticos y funcionales, ideales para que emprendedores y marcas ofrezcan un producto útil y con diseño propio. 💼🌟\n\n🔹 Características del producto:\n✔️ Tamaño: 9 cm x 9 cm\n✔️ Papel de calidad para escritura diaria\n✔️ Diseño completamente personalizable (logo, branding, ilustración, etc.)\n\n💡 Ventajas para tu emprendimiento:\n✔️ Producción por cantidad (consultá mínimo de unidades)\n✔️ Perfectos para merchandising, regalos corporativos, souvenirs o ventas en tu tienda\n✔️ Producto práctico con terminación profesional\n✔️ Posibilidad de combinar con anotadores, stickers y otros ítems para armar sets\n\n📦 Envíos a todo el país.",
     "variaciones": [
       {
@@ -319,6 +302,11 @@
     "stock": 20,
     "imagen": "img/stickers2.jpeg",
     "imagenes": [],
+    "descuentosPorCantidad": [
+      { "cantidad": 5, "descuento": 10 },
+      { "cantidad": 10, "descuento": 15 },
+      { "cantidad": 20, "descuento": 20 }
+    ],
     "descripcion": "✨💖 Stickers Personalizados – 4 cm, 5 cm y 6 cm 💖✨\n\nEn Alt F4 Craft hacemos stickers personalizados en distintos tamaños (4 cm, 5 cm y 6 cm), ideales para que emprendedores y marcas puedan sumar valor a su merchandising o crear productos únicos para sus clientes. 🌟\n\n🔹 Características del producto:\n✔️ Tamaños disponibles: 4 cm, 5 cm y 6 cm de diámetro\n✔️ Impresos en alta calidad y a todo color\n✔️ Papel autoadhesivo resistente al agua\n✔️ Diseño completamente personalizable (logo, personaje, ilustración, branding, etc.)\n\n💡 Ventajas para tu emprendimiento:\n✔️ Producción por cantidad (consultá mínimo de unidades)\n✔️ Versátiles para usar en packaging, giveaways, ventas individuales o como parte de sets\n✔️ Terminación profesional que realza tu marca\n✔️ Posibilidad de combinar con otros productos (llaveros, phone charms, anotadores) para armar colecciones completas\n\n📦 Envíos a todo el país.",
     "variaciones": [
       {
@@ -401,6 +389,11 @@
     "stock": 15,
     "imagen": "img/photocards.jpeg",
     "imagenes": [],
+    "descuentosPorCantidad": [
+      { "cantidad": 3, "descuento": 9 },
+      { "cantidad": 5, "descuento": 14 },
+      { "cantidad": 10, "descuento": 19 }
+    ],
     "descripcion": "Photocards Personalizado de: 5.5 x 8.5 cm. \n\nUn producto versátil y coleccionable, pensado para emprendedores que quieran ampliar su catálogo. \nSe pueden personalizar con ilustraciones, personajes, logos, fotos o frases, ofreciendo una amplia gama de posibilidades según el público objetivo. \nImpresas en alta calidad, las photocards son perfectas para vender como parte de sets, colecciones temáticas o merchandising exclusivo.\n\n📦 Envíos a todo el país.",
     "variaciones": [
       {
@@ -455,6 +448,11 @@
     "stock": 15,
     "imagen": "img/photocards.jpeg",
     "imagenes": [],
+    "descuentosPorCantidad": [
+      { "cantidad": 3, "descuento": 9 },
+      { "cantidad": 5, "descuento": 14 },
+      { "cantidad": 10, "descuento": 19 }
+    ],
     "descripcion": "Photocards Personalizado de: 6.5 x 9 cm. \n\nUn producto versátil y coleccionable, pensado para emprendedores que quieran ampliar su catálogo. \nSe pueden personalizar con ilustraciones, personajes, logos, fotos o frases, ofreciendo una amplia gama de posibilidades según el público objetivo. \nImpresas en alta calidad, las photocards son perfectas para vender como parte de sets, colecciones temáticas o merchandising exclusivo.\n\n📦 Envíos a todo el país.",
     "variaciones": [
       {
@@ -509,6 +507,11 @@
     "stock": 10,
     "imagen": "img/prints.jpeg",
     "imagenes": [],
+    "descuentosPorCantidad": [
+      { "cantidad": 5, "descuento": 10 },
+      { "cantidad": 10, "descuento": 15 },
+      { "cantidad": 20, "descuento": 20 }
+    ],
     "descripcion": "🖼️✨ Prints Personalizados – Tamaños A5 ✨🖼️\n\nEn Alt F4 Craft creamos prints personalizados en tamaño A5, perfectos para que emprendedores, artistas y marcas ofrezcan ilustraciones, fanarts o diseños exclusivos en alta calidad. 🌟\n\n🔹 Características del producto:\n✔️ Tamaños disponibles: A4 (21 x 29,7 cm) y A5 (14,8 x 21 cm)\n✔️ Impresos en papel de alta calidad, con excelente definición de color\n✔️ Perfectos para ilustraciones, posters pequeños, coleccionables o decoración\n✔️ Diseño completamente personalizable (ilustración, logo, personaje, arte digital, etc.)\n\n💡 Ventajas para tu emprendimiento:\n✔️ Producción por cantidad (consultá mínimo de unidades)\n✔️ Producto versátil: merchandising, arte coleccionable, decoración de espacios o giveaways\n✔️ Terminación profesional y resistente\n✔️ Posibilidad de combinar con otros productos (stickers, polaroids, photocards) para armar sets completos\n\n📦 Envíos a todo el país",
     "variaciones": [
       {
@@ -549,6 +552,11 @@
     "stock": 10,
     "imagen": "img/prints.jpeg",
     "imagenes": [],
+    "descuentosPorCantidad": [
+      { "cantidad": 5, "descuento": 10 },
+      { "cantidad": 10, "descuento": 15 },
+      { "cantidad": 20, "descuento": 20 }
+    ],
     "descripcion": "🖼️✨ Prints Personalizados – Tamaños A4 ✨🖼️\n\nEn Alt F4 Craft creamos prints personalizados en tamaño A4, perfectos para que emprendedores, artistas y marcas ofrezcan ilustraciones, fanarts o diseños exclusivos en alta calidad. 🌟\n\n🔹 Características del producto:\n✔️ Tamaños disponibles: A4 (21 x 29,7 cm) y A5 (14,8 x 21 cm)\n✔️ Impresos en papel de alta calidad, con excelente definición de color\n✔️ Perfectos para ilustraciones, posters pequeños, coleccionables o decoración\n✔️ Diseño completamente personalizable (ilustración, logo, personaje, arte digital, etc.)\n\n💡 Ventajas para tu emprendimiento:\n✔️ Producción por cantidad (consultá mínimo de unidades)\n✔️ Producto versátil: merchandising, arte coleccionable, decoración de espacios o giveaways\n✔️ Terminación profesional y resistente\n✔️ Posibilidad de combinar con otros productos (stickers, polaroids, photocards) para armar sets completos\n\n📦 Envíos a todo el país",
     "variaciones": [
       {
@@ -589,6 +597,11 @@
     "stock": 14,
     "imagen": "img/polaroids.jpeg",
     "imagenes": [],
+    "descuentosPorCantidad": [
+      { "cantidad": 10, "descuento": 10 },
+      { "cantidad": 20, "descuento": 15 },
+      { "cantidad": 40, "descuento": 20 }
+    ],
     "descripcion": "📸✨ Polaroids Personalizadas – 8.8 x 10.7 cm ✨📸\n\nEn Alt F4 Craft hacemos polaroids personalizadas de 8.8 x 10.7 cm. Ideales para que emprendedores, artistas y marcas ofrezcan recuerdos únicos, fanarts o diseños exclusivos. 💕\n\n🔹 Características del producto:\n✔️ Tamaños disponibles:\n   - Polaroid clásica: 8.8 x 10.7 cm\n   - Tira: 5 x 12.9 cm (incluye 3 fotos en secuencia)\n✔️ Impresión en papel de alta calidad, con colores definidos y acabado profesional\n✔️ Diseño completamente personalizable (foto, ilustración, logo, personaje, etc.)\n✔️ Estilo polaroid ideal para coleccionar, decorar o regalar\n\n💡 Ventajas para tu emprendimiento:\n✔️ Producción por cantidad (consultá mínimo de unidades)\n✔️ Perfectas para merchandising, giveaways, sets coleccionables o souvenirs\n✔️ Se combinan muy bien con otros productos como photocards, prints y stickers\n✔️ Terminación de calidad que resalta tu diseño\n\n📦 Envíos a todo el país.",
     "variaciones": [
       {
@@ -629,6 +642,11 @@
     "stock": 14,
     "imagen": "img/polaroids.jpeg",
     "imagenes": [],
+    "descuentosPorCantidad": [
+      { "cantidad": 10, "descuento": 10 },
+      { "cantidad": 20, "descuento": 15 },
+      { "cantidad": 40, "descuento": 20 }
+    ],
     "descripcion": "📸✨ Polaroids Personalizadas – tira de 3 fotos (5 x 12.9 cm) ✨📸\n\nEn Alt F4 Craft hacemos polaroids personalizadas de una tira de 3 fotos de 5 x 12.9 cm. Ideales para que emprendedores, artistas y marcas ofrezcan recuerdos únicos, fanarts o diseños exclusivos. 💕\n\n🔹 Características del producto:\n✔️ Tamaños disponibles:\n   - Polaroid clásica: 8.8 x 10.7 cm\n   - Tira: 5 x 12.9 cm (incluye 3 fotos en secuencia)\n✔️ Impresión en papel de alta calidad, con colores definidos y acabado profesional\n✔️ Diseño completamente personalizable (foto, ilustración, logo, personaje, etc.)\n✔️ Estilo polaroid ideal para coleccionar, decorar o regalar\n\n💡 Ventajas para tu emprendimiento:\n✔️ Producción por cantidad (consultá mínimo de unidades)\n✔️ Perfectas para merchandising, giveaways, sets coleccionables o souvenirs\n✔️ Se combinan muy bien con otros productos como photocards, prints y stickers\n✔️ Terminación de calidad que resalta tu diseño\n\n📦 Envíos a todo el país.",
     "variaciones": [
       {
@@ -669,6 +687,11 @@
     "stock": 15,
     "imagen": "img/tarjetas_pers.jpeg",
     "imagenes": [],
+    "descuentosPorCantidad": [
+      { "cantidad": 30, "descuento": 10 },
+      { "cantidad": 100, "descuento": 15 },
+      { "cantidad": 200, "descuento": 20 }
+    ],
     "descripcion": "📇✨ Tarjetas de presentación personalizadas ✨📇\n¡El primer paso para que tu marca deje huella! 💼💖\n\nEn Alt F4 Craft hacemos tarjetas de presentación personalizadas, perfectas para emprendedores, tiendas y artistas que buscan darle una identidad única a su marca.\n\n🔹 Opciones disponibles:\n✔️ Simple faz: papel fotográfico brillante de 200 g, ideal para un diseño limpio y directo.\n✔️ Doble faz: papel fotográfico brillante de 220 g, con más espacio para mostrar tus redes, servicios o una imagen de tu marca.\n\n📏 Tamaño: 5 x 9 cm\n\n💡 Ventajas para tu emprendimiento:\n✨ Impresión de alta calidad, colores vibrantes y excelente definición.\n✨ Personalizables con tu logo, paleta de colores o estilo de marca.\n✨ Perfectas para incluir en tus pedidos, ferias o colaboraciones.\n✨ Producción por cantidad.\n\n📦 Envíos a todo el país.",
     "variaciones": [
       {

@@ -79,6 +79,15 @@
             </select>
           </div>
 
+          <div id="campoPuntoRetiro" style="display: none">
+            <label for="puntoRetiro">Seleccionar punto de retiro:</label>
+            <select id="puntoRetiro" name="puntoRetiro">
+              <option value="">Seleccionar</option>
+              <option value="Mukami Showroom">Mukami Showroom</option>
+              <option value="Aquelarre Showroom">Aquelarre Showroom</option>
+            </select>
+          </div>
+
           <div id="tipoEnvioBloque" style="display: none">
             <label for="tipoEnvio">Tipo de envío:</label>
             <select name="tipoEnvio" id="tipoEnvio">
@@ -234,6 +243,7 @@
     <footer class="site-footer"></footer>
 
     <!-- Scripts: carga carrito.js (enviarPedido), script.js (lógica general), page-cart.js (render específico) -->
+    <script src="js/descuentos-cantidad.js" defer></script>
     <script src="js/carrito.js" defer></script>
     <script src="js/script.js" defer></script>
     <script src="js/form-helpers.js" defer></script>

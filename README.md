@@ -44,5 +44,11 @@ altf4craft
 Contributions are welcome! Please submit a pull request or open an issue for any suggestions or improvements.
 
 ## Proximas mejoras
-- Campo ¿Quién recibe?, solo desplegar si se elegi la opcion: Punto de retiro o Evento del Método de envío.
-- Desplegar campos para solicitar los datos de envio, cuando se seleccione la opcion Envío por correo del Método de envío.
+✅ Campo ¿Quién recibe?, solo desplegar si se elegi la opcion: Punto de retiro o Evento del Método de envío.
+✅ Desplegar campos para solicitar los datos de envio, cuando se seleccione la opcion Envío por correo del Método de envío.
+✅ Actualizar precio que se muestra en product.html basandose en el precio que dice la variante seleccionada.
+✅ Agregar que aparezca el campo 'Punto de retiro' con las opciones: Mukami Showroom y Aquelarre Showrrom, cuando se elige la opcion de Punto de retiro en el campo Método de envío.
+
+## Para fixear
+✅ - No logra agregar más cantidad de productos desde el carrito.
+

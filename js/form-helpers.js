@@ -153,6 +153,27 @@
     }
   }
 
+  // Mostrar/ocultar campo "Punto de retiro" cuando se selecciona esa opción en envío
+  function toggleCampoPuntoRetiro() {
+    var selectEnvio = qs('select[name="envio"]');
+    if (!selectEnvio) return;
+    var campoPuntoRetiro = qs('#campoPuntoRetiro');
+    if (!campoPuntoRetiro) return;
+    var selectPuntoRetiro = campoPuntoRetiro.querySelector('select');
+
+    var valor = selectEnvio.value;
+    if (valor === 'Punto de retiro') {
+      campoPuntoRetiro.style.display = 'block';
+      if (selectPuntoRetiro) selectPuntoRetiro.required = true;
+    } else {
+      campoPuntoRetiro.style.display = 'none';
+      if (selectPuntoRetiro) {
+        selectPuntoRetiro.required = false;
+        selectPuntoRetiro.value = '';
+      }
+    }
+  }
+
   // Mostrar/ocultar campo DNI según factura o envio correo (igual que legacy)
   function toggleCampoDNI() {
     var selectFactura = qs('select[name="factura"]');
@@ -185,12 +206,14 @@
     // Inicializa estados
     actualizarOpcionesPago();
     toggleCampoRecibe();
+    toggleCampoPuntoRetiro();
     toggleDatosEnvio();
     toggleCampoDNI();
 
     if (envioSelect) envioSelect.addEventListener('change', function () {
       actualizarOpcionesPago();
       toggleCampoRecibe();
+      toggleCampoPuntoRetiro();
       toggleDatosEnvio();
       toggleCampoDNI();
     });

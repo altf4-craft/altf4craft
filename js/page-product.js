@@ -102,11 +102,20 @@ function renderProducto(producto) {
 
   // actualizar precio/imagen al cambiar variante
   const variantSelect = document.getElementById('variacion-select');
-  const precioElem = document.getElementById('variacion-precio') || document.getElementById('precio-general');
+  const precioGeneralElem = document.getElementById('precio-general');
+  const precioVariacionElem = document.getElementById('variacion-precio');
   if (variantSelect) {
     variantSelect.addEventListener('change', (e) => {
       const opt = e.target.options[e.target.selectedIndex];
-      if (opt && precioElem) precioElem.textContent = `$${Number(opt.dataset.precio || producto.precio).toFixed(2)}`;
+      const precioActualizado = `$${Number(opt.dataset.precio || producto.precio).toFixed(2)}`;
+      
+      // Actualizar el precio general (más visible)
+      if (precioGeneralElem) precioGeneralElem.textContent = precioActualizado;
+      
+      // Actualizar el precio de la variación (si existe)
+      if (precioVariacionElem) precioVariacionElem.textContent = precioActualizado;
+      
+      // Cambiar imagen si la variante tiene una asociada
       if (opt && opt.dataset.imagen) {
         const img = opt.dataset.imagen;
         if (img) window.cambiarImagen(document.querySelector(`img.producto-thumb[src="${img}"]`) || null, img);

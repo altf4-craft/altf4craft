@@ -6,13 +6,16 @@ let totalConDescuento = null;
 let porcentajeDescuento = null;
 
 document.addEventListener('DOMContentLoaded', async () => {
+  // Cargar productos en TODAS las páginas
+  productos = await cargarProductos();
+  window.productos = productos; // Hacerlos globalmente accesibles
+  
   // Initialize cart for all pages
   actualizarCarrito();
 
   // Only run on index.html (main page)
   if (document.querySelector('.banner-carrusel')) {
     initializeCarousel();
-    productos = await cargarProductos();
     mostrarProductos(productos);
   }
 
@@ -56,8 +59,9 @@ function mostrarProductos(listaProductos) {
   });
 }
 
-function eliminarDelCarrito(id) {
-  carrito = carrito.filter(item => item.id !== id);
+function eliminarDelCarrito(id, variacion = null) {
+  carrito = carrito.filter(item => !(String(item.id) === String(id) && (variacion == null || item.variacion === variacion)));
+  window.carrito = carrito; // Sincronizar con global
   guardarCarrito();
   actualizarCarrito();
 }
@@ -81,19 +85,57 @@ function actualizarCarrito() {
     const producto = (window.productos || []).find(p => String(p.id) === String(item.id));
     const maxStock = producto ? producto.stock : item.cantidad;
 
+    // Obtener nombre de la variante si existe
+    let nombreVariante = '';
+    if (item.variacion && producto && producto.variaciones) {
+      const variante = producto.variaciones.find(v => 
+        String(v.id) === String(item.variacion) || String(v.nombre) === String(item.variacion)
+      );
+      if (variante) {
+        nombreVariante = ` - ${variante.nombre}`;
+      }
+    }
+
+    // Calcular subtotal con descuentos por cantidad si están disponibles
+    let subtotalFinal = item.subtotal;
+    let descuentoPorcentaje = 0;
+    let descuentoMonto = 0;
+    
+    if (typeof obtenerDescuentoPorCantidad === 'function' && producto) {
+      descuentoPorcentaje = obtenerDescuentoPorCantidad(producto, item.cantidad);
+      if (descuentoPorcentaje > 0) {
+        const precioTotalBase = item.precio * item.cantidad;
+        descuentoMonto = (precioTotalBase * descuentoPorcentaje) / 100;
+        subtotalFinal = precioTotalBase - descuentoMonto;
+      }
+    }
+
     const li = document.createElement('li');
-    li.innerHTML = `
-      ${item.nombre} - $${item.precio} x 
-      <button onclick="cambiarCantidad('${item.id}', -1)">-</button>
+    let liContent = `
+      ${item.nombre}${nombreVariante} - $${item.precio} x 
+      <button onclick="cambiarCantidad('${item.id}', -1, ${item.variacion ? `'${item.variacion.replace(/'/g, "\\'")}'` : 'null'})">-</button>
       <span id="cantidad-${item.id}">${item.cantidad}</span>
-      <button onclick="cambiarCantidad('${item.id}', 1)">+</button>
-      = $${item.subtotal}
-      <button onclick="eliminarDelCarrito('${item.id}')">Eliminar</button>
-    `;
+      <button onclick="cambiarCantidad('${item.id}', 1, ${item.variacion ? `'${item.variacion.replace(/'/g, "\\'")}'` : 'null'})">+</button>
+      = $${subtotalFinal.toFixed(2)}`;
+    
+    // Mostrar descuento si aplica
+    if (descuentoPorcentaje > 0) {
+      liContent += `<span style="color: green; margin-left: 10px;">🎉 ${descuentoPorcentaje}% OFF (-$${descuentoMonto.toFixed(2)})</span>`;
+    }
+    
+    liContent += `<button onclick="eliminarDelCarrito('${item.id}', ${item.variacion ? `'${item.variacion.replace(/'/g, "\\'")}'` : 'null'})">Eliminar</button>`;
+    li.innerHTML = liContent;
     lista.appendChild(li);
   });
 
-  const total = carrito.reduce((acc, item) => acc + item.subtotal, 0);
+  const total = carrito.reduce((acc, item) => {
+    const producto = (window.productos || []).find(p => String(p.id) === String(item.id));
+    if (typeof calcularSubtotalConDescuento === 'function' && producto) {
+      const calc = calcularSubtotalConDescuento(item, producto);
+      return acc + calc.subtotal;
+    }
+    return acc + item.subtotal;
+  }, 0);
 
   const totalEl = document.getElementById('total');
   const descuentoEl = document.getElementById('descuento-aplicado');
@@ -103,10 +145,10 @@ function actualizarCarrito() {
     const descuento = (total * porcentajeDescuento) / 100;
     totalConDescuento = total - descuento;
     if (totalEl) totalEl.textContent = `Total: $${totalConDescuento.toFixed(2)}`;
-    if (descuentoEl) descuentoEl.textContent = `Descuento aplicado: -$${descuento.toFixed(2)}`;
+    if (descuentoEl) descuentoEl.textContent = `Descuento por cupón: -$${descuento.toFixed(2)}`;
   } else {
     totalConDescuento = null;
-    if (totalEl) totalEl.textContent = `Total: $${total}`;
+    if (totalEl) totalEl.textContent = `Total: $${total.toFixed(2)}`;
     if (descuentoEl) descuentoEl.textContent = '';
   }
 
@@ -135,7 +177,15 @@ document.getElementById('form-datos').addEventListener('submit', async function 
     return;
   }
 
-  const totalSinDescuento = carrito.reduce((acc, item) => acc + item.subtotal, 0);
+  const totalSinDescuento = carrito.reduce((acc, item) => {
+    const producto = (window.productos || []).find(p => String(p.id) === String(item.id));
+    if (typeof calcularSubtotalConDescuento === 'function' && producto) {
+      const calc = calcularSubtotalConDescuento(item, producto);
+      return acc + calc.subtotal;
+    }
+    return acc + item.subtotal;
+  }, 0);
+  
   let total = totalSinDescuento;
   if (typeof porcentajeDescuento === 'number' && porcentajeDescuento > 0) {
     const descuento = (totalSinDescuento * porcentajeDescuento) / 100;
@@ -211,6 +261,7 @@ function cambiarCantidad(id, cambio = 0, variacion = null) {
     item.subtotal = Number(item.precio) * item.cantidad;
   }
 
+  window.carrito = carrito; // Sincronizar con global
   if (typeof guardarCarrito === 'function') guardarCarrito();
   if (typeof actualizarCarrito === 'function') actualizarCarrito();
 }
@@ -219,6 +270,11 @@ window.cambiarCantidad = cambiarCantidad;
 function guardarCarrito() {
   localStorage.setItem('carrito', JSON.stringify(carrito));
 }
+
+// Exportar funciones globalmente
+window.carrito = carrito;
+window.guardarCarrito = guardarCarrito;
+window.eliminarDelCarrito = eliminarDelCarrito;
 
 // Mostrar alerta flotante (mensaje corto, auto-hide)
 function mostrarAlerta(message = '¡Producto agregado al carrito!', type = 'success') {

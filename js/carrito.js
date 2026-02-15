@@ -92,6 +92,9 @@ window.agregarAlCarrito = function(idOrProduct, cantidadManual = 1, variacionSel
       });
     }
 
+    // Sincronizar con window.carrito
+    if (typeof window !== 'undefined') window.carrito = carrito;
+    
     if (typeof guardarCarrito === 'function') guardarCarrito();
     if (typeof actualizarCarrito === 'function') actualizarCarrito();
     if (typeof mostrarAlerta === 'function') mostrarAlerta();
@@ -100,16 +103,3 @@ window.agregarAlCarrito = function(idOrProduct, cantidadManual = 1, variacionSel
     if (typeof mostrarAlerta === 'function') mostrarAlerta('Error al agregar al carrito', 'error');
   }
 };
-
-export async function handler(event) {
-  // validar secret
-  const incomingSecret = event.headers['x-webhook-secret'] || event.headers['X-WEBHOOK-SECRET'];
-  if (!process.env.WEBHOOK_SECRET || incomingSecret !== process.env.WEBHOOK_SECRET) {
-    return {
-      statusCode: 401,
-      headers: CORS_HEADERS,
-      body: JSON.stringify({ message: "Unauthorized" }),
-    };
-  }
-  // ...existing code...
-}

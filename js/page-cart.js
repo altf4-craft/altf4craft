@@ -71,26 +71,69 @@ function renderCartPage() {
       }
     }
 
+    // Obtener nombre de la variante si existe
+    let nombreVariante = '';
+    if (item.variacion && producto && producto.variaciones) {
+      const variante = producto.variaciones.find(v => 
+        String(v.id) === String(item.variacion) || String(v.nombre) === String(item.variacion)
+      );
+      if (variante) {
+        nombreVariante = ` - ${variante.nombre}`;
+      }
+    }
+
+    // Calcular subtotal con descuentos por cantidad si están disponibles
+    let subtotalFinal = item.subtotal;
+    let descuentoPorcentaje = 0;
+    let descuentoMonto = 0;
+    
+    if (typeof window.obtenerDescuentoPorCantidad === 'function' && producto) {
+      descuentoPorcentaje = window.obtenerDescuentoPorCantidad(producto, item.cantidad);
+      if (descuentoPorcentaje > 0) {
+        const precioTotalBase = item.precio * item.cantidad;
+        descuentoMonto = (precioTotalBase * descuentoPorcentaje) / 100;
+        subtotalFinal = precioTotalBase - descuentoMonto;
+      }
+    }
+
     const disabledPlus = (Number(item.cantidad) >= maxStock) ? 'disabled' : '';
     const li = document.createElement('li');
     li.className = 'carrito-item';
-    li.innerHTML = `
+    let liContent = `
       <div>
-        <strong>${escapeHtml(item.nombre)}</strong>
+        <strong>${escapeHtml(item.nombre)}${escapeHtml(nombreVariante)}</strong>
         <div>Precio: $${Number(item.precio).toFixed(2)}</div>
         <div>
           <button class="cant-minus" data-id="${item.id}" data-variacion="${item.variacion || ''}">-</button>
           <span class="cantidad">${item.cantidad}</span>
           <button class="cant-plus" data-id="${item.id}" data-variacion="${item.variacion || ''}" ${disabledPlus}>+</button>
         </div>
-        <div>Subtotal: $${Number(item.subtotal).toFixed(2)}</div>
-        <div><button class="eliminar-item" data-id="${item.id}" data-variacion="${item.variacion || ''}">Eliminar</button></div>
+        <div>Subtotal: $${subtotalFinal.toFixed(2)}</div>`;
+    
+    // Mostrar descuento si aplica
+    if (descuentoPorcentaje > 0) {
+      liContent += `<div style="color: green; font-weight: bold;">🎉 ${descuentoPorcentaje}% OFF (-$${descuentoMonto.toFixed(2)})</div>`;
+    }
+    
+    liContent += `<div><button class="eliminar-item" data-id="${item.id}" data-variacion="${item.variacion || ''}">Eliminar</button></div>
       </div>
     `;
+    li.innerHTML = liContent;
     listaEl.appendChild(li);
   });
 
-  const total = carritoLocal.reduce((sum, it) => sum + Number(it.subtotal || 0), 0);
+  const total = carritoLocal.reduce((sum, it) => {
+    const producto = (window.productos || []).find(p => String(p.id) === String(it.id));
+    if (typeof window.obtenerDescuentoPorCantidad === 'function' && producto) {
+      const descuentoPorcentaje = window.obtenerDescuentoPorCantidad(producto, it.cantidad);
+      if (descuentoPorcentaje > 0) {
+        const precioTotalBase = it.precio * it.cantidad;
+        const descuentoMonto = (precioTotalBase * descuentoPorcentaje) / 100;
+        return sum + (precioTotalBase - descuentoMonto);
+      }
+    }
+    return sum + Number(it.subtotal || 0);
+  }, 0);
   if (totalEl) totalEl.textContent = `Total: $${total.toFixed(2)}`;
 
 }
