@@ -40,18 +40,52 @@ exports.handler = async function(event) {
     });
 
     const productosHtml = (data.productos || [])
-      .map(p => `<li>${p.nombre} - Cant: ${p.cantidad} - Subtotal: $${p.subtotal}</li>`).join("");
+      .map(p => {
+        const variante = p.variacion ? ` (${p.variacion})` : '';
+        return `<li>${p.nombre}${variante} - Cant: ${p.cantidad} - Subtotal: $${p.subtotal}</li>`;
+      }).join("");
+
+    // Construir sección de envío según tipo
+    let datosEnvioSeccion = '';
+    if (data.envio === 'Punto de retiro') {
+      datosEnvioSeccion = `<p><strong>Punto de retiro:</strong> ${data.puntoRetiro || 'No especificado'}</p>`;
+    } else if (data.envio === 'Evento') {
+      datosEnvioSeccion = `<p><strong>Tipo de envío:</strong> ${data.tipoEnvio || 'No especificado'}</p>`;
+    } else if (data.envio === 'Envío por correo') {
+      datosEnvioSeccion = `
+        <p><strong>Tipo de envío:</strong> ${data.tipoEnvio || 'No especificado'}</p>
+        <p><strong>Envío por:</strong> ${data.envioPor || 'No especificado'}</p>
+        ${data.calle ? `<p><strong>Dirección:</strong> ${data.calle} ${data.numero || ''}${data.piso ? ` Piso ${data.piso}` : ''}${data.departamento ? ` Depto ${data.departamento}` : ''}</p>` : ''}
+        ${data.entreCalles ? `<p><strong>Entre calles:</strong> ${data.entreCalles}</p>` : ''}
+        ${data.provincia ? `<p><strong>Provincia:</strong> ${data.provincia}</p>` : ''}
+        ${data.localidad ? `<p><strong>Localidad:</strong> ${data.localidad}</p>` : ''}
+        ${data.codigoPostal ? `<p><strong>Código Postal:</strong> ${data.codigoPostal}</p>` : ''}
+        ${data.comentarios ? `<p><strong>Comentarios:</strong> ${data.comentarios}</p>` : ''}
+      `;
+    }
 
     const html = `
       <h2>Nuevo pedido</h2>
-      <p><strong>Cliente:</strong> ${data.nombre}</p>
+      <h3>Datos del cliente</h3>
+      <p><strong>Nombre:</strong> ${data.nombre}</p>
+      ${data.dni ? `<p><strong>DNI:</strong> ${data.dni}</p>` : ''}
       <p><strong>Email:</strong> ${data.email}</p>
       <p><strong>Teléfono:</strong> ${data.telefono}</p>
-      <p><strong>Envío:</strong> ${data.envio}</p>
-      <p><strong>Recibe:</strong> ${data.recibe}</p>
+      
+      <h3>Envío</h3>
+      <p><strong>Método:</strong> ${data.envio}</p>
+      ${datosEnvioSeccion}
+      ${data.recibe ? `<p><strong>¿Quién recibe?:</strong> ${data.recibe}</p>` : ''}
+      
+      <h3>Pago y preferencias</h3>
       <p><strong>Método de pago:</strong> ${data.pago}</p>
-      <p><strong>Total:</strong> $${data.total}</p>
-      <h3>Productos:</h3><ul>${productosHtml}</ul>
+      <p><strong>Autoriza publicación:</strong> ${data.publicidad}</p>
+      <p><strong>Factura C:</strong> ${data.factura}</p>
+      
+      <h3>Productos (${data.productos.length})</h3>
+      <ul>${productosHtml}</ul>
+      
+      <h3>Total: $${data.total}</h3>
     `;
 
     // Mail al admin (con replyTo al cliente)
@@ -70,10 +104,24 @@ exports.handler = async function(event) {
       const clienteHtml = `
         <h2>Confirmación de pedido</h2>
         <p>Hola ${data.nombre},</p>
-        <p>Recibimos tu pedido por $${data.total}. Te contactaremos pronto para coordinar.</p>
-        <h3>Resumen</h3>
+        <p>¡Gracias por tu compra! Recibimos tu pedido por <strong>$${data.total}</strong>. Te contactaremos pronto para confirmar y coordinar la entrega.</p>
+        
+        <h3>Resumen de tu pedido</h3>
         <ul>${productosHtml}</ul>
-        <p>Gracias por comprar en Alt F4 Craft.</p>
+        
+        <h3>Datos de entrega</h3>
+        <p><strong>Método:</strong> ${data.envio}</p>
+        ${datosEnvioSeccion}
+        ${data.recibe ? `<p><strong>¿Quién recibe?:</strong> ${data.recibe}</p>` : ''}
+        
+        <h3>Detalles de pago</h3>
+        <p><strong>Método de pago:</strong> ${data.pago}</p>
+        <p><strong>Autoriza publicación:</strong> ${data.publicidad}</p>
+        <p><strong>Factura C:</strong> ${data.factura}</p>
+        
+        <hr>
+        <p>Si tienes preguntas, contáctanos a <strong>altf4.craft@gmail.com</strong></p>
+        <p>¡Gracias por confiar en Alt F4 Craft!</p>
       `;
       const clienteMail = {
         from: `"AltF4 Craft - Papelería y acrílicos" <${process.env.GMAIL_USER}>`,

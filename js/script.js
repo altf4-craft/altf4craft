@@ -36,6 +36,8 @@ async function cargarProductos() {
 
 function mostrarProductos(listaProductos) {
   const catalogo = document.getElementById('catalogo');
+  if (!catalogo) return; // Salir si el elemento no existe (ej: en cart.html)
+
   catalogo.innerHTML = '';
 
   listaProductos.forEach(producto => {
@@ -194,10 +196,23 @@ document.getElementById('form-datos').addEventListener('submit', async function 
 
   const pedido = {
     nombre: datos.nombre,
+    dni: datos.dni,
     email: datos.email,
     telefono: datos.celular,
     envio: datos.envio,
-    recibe: datos.recibe,
+    puntoRetiro: datos.puntoRetiro || null,
+    tipoEnvio: datos.tipoEnvio || null,
+    envioPor: datos.envioPor || null,
+    calle: datos.calle || null,
+    numero: datos.numero || null,
+    piso: datos.piso || null,
+    departamento: datos.departamento || null,
+    entreCalles: datos.entreCalles || null,
+    provincia: datos.provincia || null,
+    localidad: datos.localidad || null,
+    codigoPostal: datos.codigoPostal || null,
+    comentarios: datos.comentarios || null,
+    recibe: datos.recibe || null,
     pago: datos.pago,
     publicidad: datos.publicidad,
     factura: datos.factura,
