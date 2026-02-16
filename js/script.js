@@ -231,7 +231,8 @@ document.getElementById('form-datos').addEventListener('submit', async function 
     imagen: p.imagen || null
   }));
 
-  console.log('Enviando pedido:', pedido);
+  // Log solo en modo depuración. Para activarlo añadir `window.DEBUG = true` en el entorno de desarrollo.
+  if (window.DEBUG) console.log('Enviando pedido:', pedido);
 
   // Enviar al backend (Netlify Function)
   const ok = await enviarPedido(pedido);
