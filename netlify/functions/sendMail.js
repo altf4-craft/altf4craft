@@ -120,7 +120,7 @@ exports.handler = async function(event) {
         <p><strong>Factura C:</strong> ${data.factura}</p>
         
         <hr>
-        <p>Si tienes preguntas, contáctanos a <strong>altf4.craft@gmail.com</strong></p>
+        <p>Si tienes preguntas, contáctanos a <strong>${process.env.ADMIN_EMAIL || 'contacto'}</strong></p>
         <p>¡Gracias por confiar en Alt F4 Craft!</p>
       `;
       const clienteMail = {
