@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Gracias por tu compra - Alt F4 Craft</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <style>
+      .checkout-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        min-height: 60vh;
+        text-align: center;
+        padding: 40px 20px;
+      }
+
+      .checkout-icon {
+        font-size: 80px;
+        margin-bottom: 30px;
+        animation: scaleIn 0.6s ease-out;
+      }
+
+      .checkout-title {
+        font-size: 42px;
+        color: #333;
+        margin-bottom: 20px;
+        font-weight: bold;
+      }
+
+      .checkout-subtitle {
+        font-size: 20px;
+        color: #666;
+        margin-bottom: 40px;
+        line-height: 1.6;
+      }
+
+      .checkout-text {
+        font-size: 16px;
+        color: #555;
+        max-width: 600px;
+        margin: 20px auto;
+        line-height: 1.8;
+      }
+
+      .checkout-button {
+        background-color: #4CAF50;
+        color: white;
+        padding: 15px 40px;
+        font-size: 16px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-block;
+        margin-top: 30px;
+        transition: background-color 0.3s;
+      }
+
+      .checkout-button:hover {
+        background-color: #45a049;
+      }
+
+      .checkout-info {
+        background-color: #f9f9f9;
+        border-left: 4px solid #4CAF50;
+        padding: 20px;
+        margin-top: 40px;
+        text-align: left;
+        max-width: 600px;
+      }
+
+      .checkout-info h3 {
+        margin-top: 0;
+        color: #333;
+      }
+
+      .checkout-info p {
+        margin: 10px 0;
+        color: #666;
+      }
+
+      @keyframes scaleIn {
+        from {
+          transform: scale(0);
+          opacity: 0;
+        }
+        to {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="logo-container">
+        <img src="img/Logo_AltF4.png" alt="Logo Alt F4 Craft" class="logo" />
+        <h1>Alt F4 Craft</h1>
+      </div>
+      <nav>
+        <a href="index.html" title="Catálogo"><i class="fas fa-store"></i></a>
+      </nav>
+    </header>
+
+    <main class="container">
+      <div class="checkout-container">
+        <div class="checkout-icon">✅</div>
+        <h2 class="checkout-title">¡Gracias por tu compra!</h2>
+        <p class="checkout-subtitle">Tu pedido ha sido recibido exitosamente</p>
+
+        <div class="checkout-text">
+          <p>
+            Nos complace confirmar que tu pedido ha sido registrado en nuestro
+            sistema.
+          </p>
+          <p>
+            Nos pondremos en contacto contigo pronto para confirmar los detalles y
+            coordinar la entrega.
+          </p>
+        </div>
+
+        <div class="checkout-info">
+          <h3>¿Qué sigue?</h3>
+          <p>
+            ✓ <strong>Confirmación:</strong> Recibirás un correo con los detalles
+            de tu pedido
+          </p>
+          <p>
+            ✓ <strong>Contacto:</strong> Te contactaremos para confirmar la
+            disponibilidad
+          </p>
+          <p>
+            ✓ <strong>Entrega:</strong> Coordinaremos la mejor opción de entrega
+            para ti
+          </p>
+        </div>
+
+        <a href="index.html" class="checkout-button">Volver al catálogo</a>
+      </div>
+    </main>
+
+    <footer class="site-footer"></footer>
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+    />
+  </body>
+</html>

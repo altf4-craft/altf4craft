@@ -50,7 +50,8 @@ exports.handler = async function(event) {
     if (data.envio === 'Punto de retiro') {
       datosEnvioSeccion = `<p><strong>Punto de retiro:</strong> ${data.puntoRetiro || 'No especificado'}</p>`;
     } else if (data.envio === 'Evento') {
-      datosEnvioSeccion = `<p><strong>Tipo de envío:</strong> ${data.tipoEnvio || 'No especificado'}</p>`;
+      // No incluir "Tipo de envío" para evento (puede no estar especificado)
+      datosEnvioSeccion = '';
     } else if (data.envio === 'Envío por correo') {
       datosEnvioSeccion = `
         <p><strong>Tipo de envío:</strong> ${data.tipoEnvio || 'No especificado'}</p>

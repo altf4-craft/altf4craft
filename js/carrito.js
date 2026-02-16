@@ -18,6 +18,10 @@ async function enviarPedido(pedido) {
       }
       localStorage.removeItem("carrito");
       localStorage.removeItem("cliente");
+      // Redirigir a página de gracias después de 1 segundo
+      setTimeout(() => {
+        window.location.href = "checkout.html";
+      }, 1000);
       return true;
     } else {
       if (typeof mostrarAlerta === 'function') {

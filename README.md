@@ -48,6 +48,8 @@ Contributions are welcome! Please submit a pull request or open an issue for any
 ✅ Desplegar campos para solicitar los datos de envio, cuando se seleccione la opcion Envío por correo del Método de envío.
 ✅ Actualizar precio que se muestra en product.html basandose en el precio que dice la variante seleccionada.
 ✅ Agregar que aparezca el campo 'Punto de retiro' con las opciones: Mukami Showroom y Aquelarre Showrrom, cuando se elige la opcion de Punto de retiro en el campo Método de envío.
+✅ Al hacer un pedido donde se selecciona la opcion 'evento' en el campo 'Metodo de envio', a ambos mails se envia esta informacion que no es necesaria 'Tipo de envío: No especificado'
+✅ Que luego de realizar el envio del pedido la pagina cambie a un Gracias por tu compra. Imagenes de referencia --> checkout1.jpeg, checkout2.jpeg
 
 ## Para fixear
 ✅ - No logra agregar más cantidad de productos desde el carrito.
