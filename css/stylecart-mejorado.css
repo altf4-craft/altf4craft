@@ -194,6 +194,21 @@
   box-shadow: 0 6px 20px #8349b9;
 }
 
+.btn-proceder.disabled,
+.btn-proceder[disabled] {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.carrito-item-delete[aria-label],
+.carrito-item-delete {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
 /* Sección cupón mejorada */
 .cupon-section {
   background: linear-gradient(135deg, #8349b9 0%, #764ba2 100%);

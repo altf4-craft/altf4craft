@@ -11,7 +11,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   window.productos = productos; // Hacerlos globalmente accesibles
   
   // Initialize cart for all pages
-  actualizarCarrito();
+  // Evitar ejecutar el render legacy del carrito en la versión mejorada (cart-mejorado.html)
+  if (!document.getElementById('carrito-contenido')) {
+    actualizarCarrito();
+  }
 
   // Only run on index.html (main page)
   if (document.querySelector('.banner-carrusel')) {
@@ -164,100 +167,103 @@ function actualizarCarrito() {
   }
 }
 
-document.getElementById('form-datos').addEventListener('submit', async function (e) {
-  e.preventDefault();
-
-  const formData = new FormData(this);
-  const datos = {};
-  formData.forEach((valor, clave) => datos[clave] = valor);
-
-  if (carrito.length === 0) {
-    if (typeof mostrarAlerta === 'function') {
-      mostrarAlerta("Tu carrito está vacío.", "error");
-    }
+const formDatosEl = document.getElementById('form-datos');
+if (formDatosEl) {
+  formDatosEl.addEventListener('submit', async function (e) {
     e.preventDefault();
-    return;
-  }
 
-  const totalSinDescuento = carrito.reduce((acc, item) => {
-    const producto = (window.productos || []).find(p => String(p.id) === String(item.id));
-    if (typeof calcularSubtotalConDescuento === 'function' && producto) {
-      const calc = calcularSubtotalConDescuento(item, producto);
-      return acc + calc.subtotal;
+    const formData = new FormData(this);
+    const datos = {};
+    formData.forEach((valor, clave) => datos[clave] = valor);
+
+    if (carrito.length === 0) {
+      if (typeof mostrarAlerta === 'function') {
+        mostrarAlerta("Tu carrito está vacío.", "error");
+      }
+      e.preventDefault();
+      return;
     }
-    return acc + item.subtotal;
-  }, 0);
-  
-  let total = totalSinDescuento;
-  if (typeof porcentajeDescuento === 'number' && porcentajeDescuento > 0) {
-    const descuento = (totalSinDescuento * porcentajeDescuento) / 100;
-    total = totalSinDescuento - descuento;
-  }
 
-  const pedido = {
-    nombre: datos.nombre,
-    dni: datos.dni,
-    email: datos.email,
-    telefono: datos.celular,
-    envio: datos.envio,
-    puntoRetiro: datos.puntoRetiro || null,
-    tipoEnvio: datos.tipoEnvio || null,
-    envioPor: datos.envioPor || null,
-    calle: datos.calle || null,
-    numero: datos.numero || null,
-    piso: datos.piso || null,
-    departamento: datos.departamento || null,
-    entreCalles: datos.entreCalles || null,
-    provincia: datos.provincia || null,
-    localidad: datos.localidad || null,
-    codigoPostal: datos.codigoPostal || null,
-    comentarios: datos.comentarios || null,
-    recibe: datos.recibe || null,
-    pago: datos.pago,
-    publicidad: datos.publicidad,
-    factura: datos.factura,
-    productos: carrito,
-    total: Number(total.toFixed(2))
-  };
+    const totalSinDescuento = carrito.reduce((acc, item) => {
+      const producto = (window.productos || []).find(p => String(p.id) === String(item.id));
+      if (typeof calcularSubtotalConDescuento === 'function' && producto) {
+        const calc = calcularSubtotalConDescuento(item, producto);
+        return acc + calc.subtotal;
+      }
+      return acc + item.subtotal;
+    }, 0);
+    
+    let total = totalSinDescuento;
+    if (typeof porcentajeDescuento === 'number' && porcentajeDescuento > 0) {
+      const descuento = (totalSinDescuento * porcentajeDescuento) / 100;
+      total = totalSinDescuento - descuento;
+    }
 
-  // Asegurar que cada producto enviado incluya la propiedad `variacion` y loguear el pedido
-  pedido.productos = (pedido.productos || []).map(p => ({
-    id: p.id,
-    nombre: p.nombre,
-    cantidad: p.cantidad,
-    precio: p.precio,
-    subtotal: p.subtotal,
-    variacion: p.variacion || null,
-    imagen: p.imagen || null
-  }));
+    const pedido = {
+      nombre: datos.nombre,
+      dni: datos.dni,
+      email: datos.email,
+      telefono: datos.celular,
+      envio: datos.envio,
+      puntoRetiro: datos.puntoRetiro || null,
+      tipoEnvio: datos.tipoEnvio || null,
+      envioPor: datos.envioPor || null,
+      calle: datos.calle || null,
+      numero: datos.numero || null,
+      piso: datos.piso || null,
+      departamento: datos.departamento || null,
+      entreCalles: datos.entreCalles || null,
+      provincia: datos.provincia || null,
+      localidad: datos.localidad || null,
+      codigoPostal: datos.codigoPostal || null,
+      comentarios: datos.comentarios || null,
+      recibe: datos.recibe || null,
+      pago: datos.pago,
+      publicidad: datos.publicidad,
+      factura: datos.factura,
+      productos: carrito,
+      total: Number(total.toFixed(2))
+    };
 
-  // Log solo en modo depuración. Para activarlo añadir `window.DEBUG = true` en el entorno de desarrollo.
-  if (window.DEBUG) console.log('Enviando pedido:', pedido);
+    // Asegurar que cada producto enviado incluya la propiedad `variacion` y loguear el pedido
+    pedido.productos = (pedido.productos || []).map(p => ({
+      id: p.id,
+      nombre: p.nombre,
+      cantidad: p.cantidad,
+      precio: p.precio,
+      subtotal: p.subtotal,
+      variacion: p.variacion || null,
+      imagen: p.imagen || null
+    }));
 
-  // Enviar al backend (Netlify Function)
-  const ok = await enviarPedido(pedido);
-  if (!ok) return;
+    // Log solo en modo depuración. Para activarlo añadir `window.DEBUG = true` en el entorno de desarrollo.
+    if (window.DEBUG) console.log('Enviando pedido:', pedido);
 
-  // Limpiar y mostrar confirmación
-  localStorage.removeItem('carrito');
-  carrito = [];
-  actualizarCarrito();
-  if (typeof cargarProductos === 'function') productos = await cargarProductos();
-  if (typeof mostrarProductos === 'function' && document.getElementById('catalogo')) mostrarProductos(productos);
+    // Enviar al backend (Netlify Function)
+    const ok = await enviarPedido(pedido);
+    if (!ok) return;
 
-  const contenedor = document.getElementById('form-datos').parentElement;
-  let mensajeConfirmacion = document.getElementById("mensaje-confirmacion");
-  if (!mensajeConfirmacion) {
-    mensajeConfirmacion = document.createElement('p');
-    mensajeConfirmacion.id = "mensaje-confirmacion";
-    mensajeConfirmacion.style.fontWeight = 'bold';
-    mensajeConfirmacion.style.color = '#e8499a';
-    contenedor.appendChild(mensajeConfirmacion);
-  }
-  mensajeConfirmacion.textContent = '¡Gracias por tu pedido! Muy pronto nos pondremos en contacto.';
-  setTimeout(() => { mensajeConfirmacion.textContent = ''; }, 10000);
-  this.reset();
-});
+    // Limpiar y mostrar confirmación
+    localStorage.removeItem('carrito');
+    carrito = [];
+    actualizarCarrito();
+    if (typeof cargarProductos === 'function') productos = await cargarProductos();
+    if (typeof mostrarProductos === 'function' && document.getElementById('catalogo')) mostrarProductos(productos);
+
+    const contenedor = document.getElementById('form-datos').parentElement;
+    let mensajeConfirmacion = document.getElementById("mensaje-confirmacion");
+    if (!mensajeConfirmacion) {
+      mensajeConfirmacion = document.createElement('p');
+      mensajeConfirmacion.id = "mensaje-confirmacion";
+      mensajeConfirmacion.style.fontWeight = 'bold';
+      mensajeConfirmacion.style.color = '#e8499a';
+      contenedor.appendChild(mensajeConfirmacion);
+    }
+    mensajeConfirmacion.textContent = '¡Gracias por tu pedido! Muy pronto nos pondremos en contacto.';
+    setTimeout(() => { mensajeConfirmacion.textContent = ''; }, 10000);
+    this.reset();
+  });
+}
 
 function cambiarCantidad(id, cambio = 0, variacion = null) {
   if (!id) return;
@@ -293,6 +299,11 @@ function cambiarCantidad(id, cambio = 0, variacion = null) {
   window.carrito = carrito; // Sincronizar con global
   if (typeof guardarCarrito === 'function') guardarCarrito();
   if (typeof actualizarCarrito === 'function') actualizarCarrito();
+  if (window.DEBUG) console.log('cambiarCantidad -> carrito', JSON.parse(JSON.stringify(carrito)));
+  // Si la página tiene la función de renderizado mejorado, llamarla también
+  if (typeof renderCartPage === 'function') {
+    try { renderCartPage(); } catch (err) { if (window.DEBUG) console.error('renderCartPage error', err); }
+  }
 }
 window.cambiarCantidad = cambiarCantidad;
 
@@ -421,11 +432,13 @@ function initializeCarousel() {
 
   // Pause on hover
   const carousel = document.querySelector('.banner-carrusel');
-  carousel.addEventListener('mouseenter', () => clearInterval(interval));
-  carousel.addEventListener('mouseleave', () => {
-    clearInterval(interval);
-    interval = setInterval(nextSlide, 5000);
-  });
+  if (carousel) {
+    carousel.addEventListener('mouseenter', () => clearInterval(interval));
+    carousel.addEventListener('mouseleave', () => {
+      clearInterval(interval);
+      interval = setInterval(nextSlide, 5000);
+    });
+  }
 
   // Initial state
   updateSlides();
@@ -441,7 +454,11 @@ document.addEventListener('DOMContentLoaded', function() {
   const envioSelect = document.querySelector('select[name="envio"]');
   const pagoSelect = document.querySelector('select[name="pago"]');
 
+  // Sólo continuar si ambos selects existen en la página actual
+  if (!envioSelect || !pagoSelect) return;
+
   function actualizarOpcionesPago() {
+    if (!pagoSelect) return;
     // Verifica si ya existe la opción "Efectivo"
     let efectivoOption = Array.from(pagoSelect.options).find(opt => opt.value === "Efectivo");
 

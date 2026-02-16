@@ -19,9 +19,14 @@ document.addEventListener('DOMContentLoaded', () => {
         window.cambiarCantidad(id, 1, variacion);
         renderCartPage();
       }
-    } else if (e.target.classList.contains('carrito-item-delete')) {
-      const id = e.target.getAttribute('data-id');
-      const variacion = e.target.getAttribute('data-variacion') || null;
+    } else if (e.target.classList.contains('carrito-item-delete') || e.target.closest('.carrito-item-delete')) {
+      // Confirmación al eliminar
+      const btn = e.target.closest('.carrito-item-delete');
+      if (!btn) return;
+      const id = btn.getAttribute('data-id');
+      const variacion = btn.getAttribute('data-variacion') || null;
+      const nombre = btn.closest('.carrito-item')?.querySelector('.carrito-item-title')?.textContent || 'este producto';
+      if (!confirm(`¿Eliminar ${nombre} del carrito?`)) return;
       if (typeof window.eliminarDelCarrito === 'function') {
         window.eliminarDelCarrito(id, variacion);
       } else {
@@ -36,7 +41,11 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function renderCartPage() {
-  const carritoLocal = JSON.parse(localStorage.getItem('carrito')) || [];
+  if (window.DEBUG) console.log('renderCartPage start - window.carrito', JSON.parse(JSON.stringify(window.carrito || [])));
+  // Preferir la variable global si está sincronizada, fallback a localStorage
+  const carritoLocal = (Array.isArray(window.carrito) && window.carrito.length)
+    ? window.carrito
+    : (JSON.parse(localStorage.getItem('carrito')) || []);
   const carritoVacio = document.getElementById('carrito-vacio');
   const carritoContenido = document.getElementById('carrito-contenido');
   const listaEl = document.getElementById('lista-carrito');
@@ -153,6 +162,29 @@ function renderCartPage() {
 
   const totalFinal = totalConDescuentos - (totalConDescuentos * (porcentajeDescuento || 0)) / 100;
   if (totalEl) totalEl.textContent = `$${totalFinal.toFixed(2)}`;
+
+  // Control del botón de proceder
+  const btnProceder = document.getElementById('btn-proceder');
+  if (btnProceder) {
+    if (carritoLocal.length === 0) {
+      btnProceder.setAttribute('disabled', 'disabled');
+      btnProceder.classList.add('disabled');
+    } else {
+      btnProceder.removeAttribute('disabled');
+      btnProceder.classList.remove('disabled');
+    }
+  }
+
+  // Handler para proceder al checkout
+  if (btnProceder && !btnProceder.dataset.init) {
+    btnProceder.addEventListener('click', () => {
+      const carritoNow = (Array.isArray(window.carrito) && window.carrito.length) ? window.carrito : (JSON.parse(localStorage.getItem('carrito')) || []);
+      if (!carritoNow.length) return;
+      window.location.href = 'checkout-pasos.html';
+    });
+    btnProceder.dataset.init = '1';
+  }
+  if (window.DEBUG) console.log('renderCartPage end - totals:', { subtotal: totalBase, totalFinal });
 }
 
 function escapeHtml(str = '') {
