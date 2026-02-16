@@ -220,6 +220,19 @@ document.getElementById('form-datos').addEventListener('submit', async function 
     total: Number(total.toFixed(2))
   };
 
+  // Asegurar que cada producto enviado incluya la propiedad `variacion` y loguear el pedido
+  pedido.productos = (pedido.productos || []).map(p => ({
+    id: p.id,
+    nombre: p.nombre,
+    cantidad: p.cantidad,
+    precio: p.precio,
+    subtotal: p.subtotal,
+    variacion: p.variacion || null,
+    imagen: p.imagen || null
+  }));
+
+  console.log('Enviando pedido:', pedido);
+
   // Enviar al backend (Netlify Function)
   const ok = await enviarPedido(pedido);
   if (!ok) return;
@@ -229,7 +242,7 @@ document.getElementById('form-datos').addEventListener('submit', async function 
   carrito = [];
   actualizarCarrito();
   if (typeof cargarProductos === 'function') productos = await cargarProductos();
-  if (typeof mostrarProductos === 'function') mostrarProductos(productos);
+  if (typeof mostrarProductos === 'function' && document.getElementById('catalogo')) mostrarProductos(productos);
 
   const contenedor = document.getElementById('form-datos').parentElement;
   let mensajeConfirmacion = document.getElementById("mensaje-confirmacion");
