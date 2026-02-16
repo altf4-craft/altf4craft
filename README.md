@@ -50,6 +50,16 @@ Contributions are welcome! Please submit a pull request or open an issue for any
 ✅ Agregar que aparezca el campo 'Punto de retiro' con las opciones: Mukami Showroom y Aquelarre Showrrom, cuando se elige la opcion de Punto de retiro en el campo Método de envío.
 ✅ Al hacer un pedido donde se selecciona la opcion 'evento' en el campo 'Metodo de envio', a ambos mails se envia esta informacion que no es necesaria 'Tipo de envío: No especificado'
 ✅ Que luego de realizar el envio del pedido la pagina cambie a un Gracias por tu compra. Imagenes de referencia --> checkout1.jpeg, checkout2.jpeg
+🔄 Mejorar aspecto del carrito. Imagenes de referencia --> carrito1.jpeg, carrito2.jpeg
+  - Archivo: cart-mejorado.html
+  - Estilos: css/stylecart-mejorado.css
+  - JS: js/page-cart-mejorado.js
+🔄 Mejorar aspecto del checkout, separandolo por pasos, Metodo de entrega, Datos del cliente y Metodo de pago. Agregar opción de Mercado Pago o transferencia con comprobante.
+  - Archivo: checkout-pasos.html
+  - Estilos: css/checkout-pasos.css
+  - JS: js/checkout-pasos.js
+  - Pasos: 1) Entrega, 2) Datos, 3) Pago, 4) Confirmación
+  - Soporta: Mercado Pago, Transferencia bancaria con upload de comprobante
 
 ## Para fixear
 ✅ - No logra agregar más cantidad de productos desde el carrito.

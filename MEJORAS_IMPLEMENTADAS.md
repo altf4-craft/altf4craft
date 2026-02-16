@@ -2,7 +2,7 @@
 
 ## Sistema de Visibilidad Dinámica de Campos
 
-Se han implementado mejoras en el formulario de checkout del carrito (cart.html) para mostrar/ocultar campos dinámicamente según el método de envío seleccionado.
+Se han implementado mejoras en el formulario de checkout del carrito (cart-mejorado.html) para mostrar/ocultar campos dinámicamente según el método de envío seleccionado.
 
 ---
 
@@ -95,7 +95,7 @@ Se han implementado mejoras en el formulario de checkout del carrito (cart.html)
 
 ## Archivos Modificados
 
-1. **cart.html**
+1. **cart-mejorado.html**
    - Línea ~202-208: Se actualizó el campo "¿Quién recibe?"
 
 2. **js/form-helpers.js**
@@ -126,7 +126,7 @@ El archivo `js/form-helpers.js` contiene un IIFE (Immediately Invoked Function E
 
 Para verificar que las mejoras funcionan correctamente:
 
-1. Abre `cart.html` en el navegador
+1. Abre `cart-mejorado.html` en el navegador
 2. Agrega productos al carrito (si es necesario)
 3. Ve al formulario de checkout
 4. Prueba cada opción de método de envío:

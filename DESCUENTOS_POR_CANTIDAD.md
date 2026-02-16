@@ -141,7 +141,7 @@ Los descuentos por cantidad y los cupones son **independientes**:
 ### Archivos modificados
 - **`data/productos.json`** - Agregar `descuentosPorCantidad` a los productos
 - **`js/script.js`** - Integración de descuentos automáticos en `actualizarCarrito()`
-- **`cart.html`** - Carga del nuevo script `descuentos-cantidad.js`
+- **`cart-mejorado.html`** - Carga del nuevo script `descuentos-cantidad.js`
 
 ---
 

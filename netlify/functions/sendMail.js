@@ -90,12 +90,32 @@ exports.handler = async function(event) {
     `;
 
     // Mail al admin (con replyTo al cliente)
+    // Preparar attachments si hay comprobante (Base64 desde el cliente)
+    const attachments = [];
+    if (data.comprobante && data.comprobante.datos) {
+      try {
+        const match = String(data.comprobante.datos).match(/^data:(.+);base64,(.*)$/);
+        if (match) {
+          const mime = match[1];
+          const b64 = match[2];
+          attachments.push({
+            filename: data.comprobante.nombre || 'comprobante',
+            content: Buffer.from(b64, 'base64'),
+            contentType: mime
+          });
+        }
+      } catch (attErr) {
+        console.error('Error procesando comprobante:', attErr);
+      }
+    }
+
     const adminMail = {
       from: `"AltF4 Craft - Papelería y acrílicos" <${process.env.GMAIL_USER}>`,
       to: process.env.ADMIN_EMAIL,
       subject: `Nuevo pedido de ${data.nombre}`,
       html,
-      replyTo: data.email || undefined
+      replyTo: data.email || undefined,
+      attachments: attachments.length ? attachments : undefined
     };
 
     await transporter.sendMail(adminMail);

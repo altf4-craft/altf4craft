@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Carrito - Alt F4 Craft</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/stylecart-mejorado.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+    />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="logo-container">
+        <img src="img/Logo_AltF4.png" alt="Logo Alt F4 Craft" class="logo" />
+        <h1>Alt F4 Craft</h1>
+      </div>
+      <nav>
+        <a href="index.html" title="Catálogo"><i class="fas fa-store"></i></a>
+      </nav>
+    </header>
+
+    <main class="container">
+      <h2><i class="fas fa-shopping-cart"></i> Tu Carrito</h2>
+
+      <div id="carrito-vacio" class="carrito-vacio" style="display: none">
+        <i class="fas fa-inbox"></i>
+        <p>Tu carrito está vacío</p>
+        <a href="index.html">Volver al catálogo</a>
+      </div>
+
+      <div id="carrito-contenido" style="display: none">
+        <div class="carrito-container">
+          <div>
+            <div class="cupon-section">
+              <label for="codigo-cupon"><i class="fas fa-ticket-alt"></i> ¿Tenés un cupón de descuento?</label>
+              <div class="cupon-inputs">
+                <input
+                  type="text"
+                  id="codigo-cupon"
+                  placeholder="Ingresá tu código"
+                />
+                <button id="aplicar-cupon">Aplicar</button>
+              </div>
+              <p id="mensaje-cupon"></p>
+            </div>
+
+            <ul id="lista-carrito" class="carrito-items"></ul>
+          </div>
+
+          <div class="carrito-resumen">
+            <h3>Resumen</h3>
+            <div id="resumen-detalle">
+              <div class="resumen-linea">
+                <span>Subtotal</span>
+                <span id="subtotal">$0</span>
+              </div>
+              <div class="resumen-linea" id="descuento-linea" style="display: none">
+                <span>Descuento</span>
+                <span id="monto-descuento" class="discount">-$0</span>
+              </div>
+              <div class="resumen-linea total">
+                <span>Total</span>
+                <span id="total">$0</span>
+              </div>
+            </div>
+
+            <a href="checkout-pasos.html" class="btn-proceder">
+              Iniciar compra
+            </a>
+            <a href="index.html" style="display: block; text-align: center; margin-top: 10px; color: #667eea; text-decoration: none; font-size: 14px;">
+              Continuar comprando
+            </a>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer class="site-footer"></footer>
+
+    <!-- Scripts -->
+    <script src="js/descuentos-cantidad.js?v=2" defer></script>
+    <script src="js/carrito.js?v=2" defer></script>
+    <script src="js/script.js?v=2" defer></script>
+    <script src="js/page-cart-mejorado.js?v=2" defer></script>
+    <script src="js/cupones.js?v=2" defer></script>
+  </body>
+</html>

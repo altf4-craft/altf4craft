@@ -359,7 +359,7 @@ function mostrarDetalle(id) {
 
 // Nueva función para ir a la página del carrito
 function goToCart() {
-  window.location.href = 'cart.html';
+  window.location.href = 'cart-mejorado.html';
 }
 
 let imagenesCarrusel = [];
