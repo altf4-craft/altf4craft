@@ -463,6 +463,18 @@ button:hover {
   color: #e8499a;
   font-weight: bold;
   font-size: 1.2rem;
+}
+.cantidad-minima-aviso {
+  display: block;
+  margin-top: 12px;
+  padding: 10px 12px;
+  background-color: #fff3cd;
+  border: 1px solid #ffc107;
+  border-radius: 4px;
+  color: #856404;
+  font-size: 0.95rem;
+  font-weight: 500;
+  margin-bottom: 0;
 } /* responsive  */
 @media (max-width: 720px) {
   .header-controls input {

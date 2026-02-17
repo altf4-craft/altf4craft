@@ -64,17 +64,33 @@ window.agregarAlCarrito = function(idOrProduct, cantidadManual = 1, variacionSel
     // Precio / variación
     let precio = Number(producto.precio ?? 0);
     let variacionNombre = null;
+    let cantidadMinima = 1;
+    
     if (variacionSeleccion) {
       if (typeof variacionSeleccion === 'object') {
         variacionNombre = variacionSeleccion.nombre ?? variacionSeleccion.id ?? String(variacionSeleccion);
         precio = Number(variacionSeleccion.precio ?? precio);
+        cantidadMinima = Number(variacionSeleccion.cantidadMinima ?? 1);
       } else {
         variacionNombre = String(variacionSeleccion);
         const v = (producto.variaciones || []).find(x =>
           String(x.id) === variacionNombre || String(x.nombre) === variacionNombre
         );
-        if (v) precio = Number(v.precio ?? precio);
+        if (v) {
+          precio = Number(v.precio ?? precio);
+          cantidadMinima = Number(v.cantidadMinima ?? 1);
+        }
       }
+    }
+
+    // Validar cantidad mínima
+    if (cantidad < cantidadMinima) {
+      if (typeof mostrarAlerta === 'function') {
+        mostrarAlerta(`⚠️ Cantidad mínima: ${cantidadMinima} unidades. Ingresaste ${cantidad}.`, 'warning');
+      } else {
+        alert(`Cantidad mínima: ${cantidadMinima} unidades. Ingresaste ${cantidad}.`);
+      }
+      return;
     }
 
     const idStr = String(id ?? producto.id ?? '');
@@ -92,7 +108,8 @@ window.agregarAlCarrito = function(idOrProduct, cantidadManual = 1, variacionSel
         cantidad,
         variacion: variacionNombre,
         subtotal: cantidad * precio,
-        imagen: producto.imagen || (Array.isArray(producto.imagenes) && producto.imagenes[0]) || ''
+        imagen: producto.imagen || (Array.isArray(producto.imagenes) && producto.imagenes[0]) || '',
+        cantidadMinima: cantidadMinima
       });
     }
 

@@ -52,12 +52,14 @@ function renderProducto(producto) {
               data-nombre="${escapeHtml(v.nombre ?? '')}"
               data-precio="${Number(v.precio ?? producto.precio).toFixed(2)}"
               data-imagen="${escapeHtml(v.imagen ?? '')}"
+              data-cantidad-minima="${Number(v.cantidadMinima || 1)}"
               ${idx === 0 ? 'selected' : ''}>
               ${escapeHtml(v.nombre ?? ('Opción ' + (idx+1)))}
             </option>
           `).join('')}
         </select>
         <div class="variant-price" id="variacion-precio">$${Number(producto.variaciones[0]?.precio ?? producto.precio).toFixed(2)}</div>
+        <div class="variant-minimo" id="variacion-minimo"></div>
       </div>
     `;
   }
@@ -104,6 +106,38 @@ function renderProducto(producto) {
   const variantSelect = document.getElementById('variacion-select');
   const precioGeneralElem = document.getElementById('precio-general');
   const precioVariacionElem = document.getElementById('variacion-precio');
+  const minimoElem = document.getElementById('variacion-minimo');
+  const cantidadInput = document.getElementById('cantidad-add');
+  
+  // Función para actualizar el mínimo de cantidad
+  const actualizarMinimo = () => {
+    if (variantSelect) {
+      const opt = variantSelect.options[variantSelect.selectedIndex];
+      const minimoActual = Number(opt.dataset?.cantidadMinima || '1');
+      
+      // Actualizar el atributo min del input
+      if (cantidadInput) {
+        cantidadInput.min = minimoActual;
+        // Si el valor actual es menor al mínimo, lo actualizamos
+        if (Number(cantidadInput.value) < minimoActual) {
+          cantidadInput.value = minimoActual;
+        }
+      }
+      
+      // Mostrar mensaje de cantidad mínima
+      if (minimoElem) {
+        if (minimoActual > 1) {
+          minimoElem.innerHTML = `<p class="cantidad-minima-aviso">⚠️ Cantidad mínima: <strong>${minimoActual} unidades</strong></p>`;
+        } else {
+          minimoElem.innerHTML = '';
+        }
+      }
+    }
+  };
+  
+  // Inicializar mínimo en la primera variación
+  actualizarMinimo();
+  
   if (variantSelect) {
     variantSelect.addEventListener('change', (e) => {
       const opt = e.target.options[e.target.selectedIndex];
@@ -120,6 +154,9 @@ function renderProducto(producto) {
         const img = opt.dataset.imagen;
         if (img) window.cambiarImagen(document.querySelector(`img.producto-thumb[src="${img}"]`) || null, img);
       }
+      
+      // Actualizar cantidad mínima
+      actualizarMinimo();
     });
   }
 
@@ -127,15 +164,30 @@ function renderProducto(producto) {
   document.getElementById('btn-agregar').addEventListener('click', () => {
     const cantidad = Number(document.getElementById('cantidad-add').value) || 1;
     let variacionObj = null;
+    let cantidadMinima = 1;
+    
     if (variantSelect) {
       const opt = variantSelect.options[variantSelect.selectedIndex];
       const vId = opt.value;
+      cantidadMinima = Number(opt.dataset?.cantidadMinima || '1');
+      
       variacionObj = (producto.variaciones || []).find(v => String(v.id ?? v.nombre ?? '') === String(vId) || String(v.nombre) === opt.dataset.nombre) || {
         id: vId,
         nombre: opt.dataset.nombre,
         precio: Number(opt.dataset.precio || producto.precio),
-        imagen: opt.dataset.imagen || ''
+        imagen: opt.dataset.imagen || '',
+        cantidadMinima: cantidadMinima
       };
+    }
+
+    // Validar cantidad mínima
+    if (cantidad < cantidadMinima) {
+      if (typeof mostrarAlerta === 'function') {
+        mostrarAlerta(`La cantidad mínima para este producto es de ${cantidadMinima} unidades`, 'warning');
+      } else {
+        alert(`La cantidad mínima para este producto es de ${cantidadMinima} unidades`);
+      }
+      return;
     }
 
     if (typeof window.agregarAlCarrito !== 'function') {
