@@ -255,24 +255,41 @@ function actualizarSeccionesPago() {
   if (!pago) return;
 
   const seccionTransferencia = document.getElementById('seccion-transferencia');
-  const seccionMercadoPago = document.getElementById('seccion-mercado-pago');
+  const seccionQR = document.getElementById('seccion-qr');
 
   if (pago.value === 'Transferencia') {
     if (seccionTransferencia) seccionTransferencia.classList.add('visible');
-    if (seccionMercadoPago) seccionMercadoPago.classList.remove('visible');
+    if (seccionQR) seccionQR.classList.remove('visible');
+  } else if (pago.value === 'QR') {
+    if (seccionTransferencia) seccionTransferencia.classList.remove('visible');
+    if (seccionQR) seccionQR.classList.add('visible');
+    actualizarMontoQR();
   } else {
     if (seccionTransferencia) seccionTransferencia.classList.remove('visible');
-    if (seccionMercadoPago) seccionMercadoPago.classList.add('visible');
+    if (seccionQR) seccionQR.classList.remove('visible');
   }
 }
 
-function mostrarArchivoSeleccionado(file) {
-  const preview = document.getElementById('archivo-preview');
+function mostrarArchivoSeleccionado(file, previewIdParam) {
+  // Si se pasa solo el archivo (compatibilidad)
+  let previewId = 'archivo-preview';
+  let fileInputId = 'file-comprobante';
+  
+  // Si se pasa un parámetro adicional con el ID
+  if (previewIdParam) {
+    previewId = previewIdParam;
+    // Deducir el ID del input basado en el preview
+    if (previewIdParam === 'archivo-preview-qr') {
+      fileInputId = 'file-comprobante-qr';
+    }
+  }
+
+  const preview = document.getElementById(previewId);
   const maxSize = 5 * 1024 * 1024; // 5MB
 
   if (file.size > maxSize) {
-    preview.innerHTML = '<span style="color: #ff4757;">El archivo es demasiado grande. Máximo 5MB.</span>';
-    document.getElementById('file-comprobante').value = '';
+    preview.innerHTML = '<span style="color: #ff4757;"><i class="fas fa-exclamation-circle"></i> El archivo es demasiado grande. Máximo 5MB.</span>';
+    document.getElementById(fileInputId).value = '';
     return;
   }
 
@@ -280,12 +297,31 @@ function mostrarArchivoSeleccionado(file) {
 }
 
 function seleccionarPago(tipo) {
-  if (tipo === 'mercado-pago') {
-    document.getElementById('pago-mp').checked = true;
-  } else {
+  if (tipo === 'transferencia') {
     document.getElementById('pago-transf').checked = true;
+  } else if (tipo === 'qr') {
+    document.getElementById('pago-qr').checked = true;
   }
   actualizarSeccionesPago();
+}
+
+// Actualizar monto en la sección de QR
+function actualizarMontoQR() {
+  const carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+  let total = carrito.reduce((sum, item) => sum + (item.subtotal || 0), 0);
+
+  // Aplicar descuento por cupón si existe
+  const porcentajeDescuento = window.porcentajeDescuento || 0;
+  if (porcentajeDescuento > 0) {
+    const descuento = (total * porcentajeDescuento) / 100;
+    total -= descuento;
+  }
+
+  // Actualizar monto en la sección de QR
+  const qrMonto = document.getElementById('qr-monto');
+  if (qrMonto) {
+    qrMonto.textContent = `$${total.toFixed(2)}`;
+  }
 }
 
 function actualizarResumen() {
@@ -427,10 +463,23 @@ async function procesarPedido() {
       reader.readAsDataURL(comprobante);
       return;
     }
-  } else if (pedido.pago === 'Mercado Pago') {
-    // Redirigir a Mercado Pago
-    redirectToMercadoPago(pedido);
-    return;
+  } else if (pedido.pago === 'QR') {
+    // QR - adjuntar comprobante igual que transferencia
+    const comprobante = document.getElementById('file-comprobante-qr').files[0];
+    if (comprobante) {
+      // Convertir archivo a Base64 para enviar en JSON
+      const reader = new FileReader();
+      reader.onload = async () => {
+        pedido.comprobanteQR = {
+          nombre: comprobante.name,
+          tipo: comprobante.type,
+          datos: reader.result
+        };
+        await enviarPedido(pedido);
+      };
+      reader.readAsDataURL(comprobante);
+      return;
+    }
   }
 
   await enviarPedido(pedido);
@@ -464,13 +513,6 @@ async function enviarPedido(pedido) {
     console.error('Error al enviar pedido:', err);
     mostrarAlerta('Error al procesar el pedido', 'error');
   }
-}
-
-function redirectToMercadoPago(pedido) {
-  // TODO: Implementar integración con Mercado Pago
-  // Esto requiere un endpoint específico que genere la preferencia en Mercado Pago
-  console.log('Redirigiendo a Mercado Pago...', pedido);
-  mostrarAlerta('La integración con Mercado Pago se habilitará próximamente', 'info');
 }
 
 function escapeHtml(str = '') {

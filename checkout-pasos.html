@@ -10,8 +10,6 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
     />
-    <!-- SDK de Mercado Pago -->
-    <script src="https://sdk.mercadopago.com/js/v2"></script>
   </head>
   <body>
     <header class="site-header">
@@ -256,19 +254,19 @@
             <p style="color: #666; margin-bottom: 20px;">Selecciona cómo deseas pagar tu pedido:</p>
 
             <div class="pago-opciones">
-              <div class="pago-opcion" onclick="seleccionarPago('mercado-pago')">
-                <input type="radio" id="pago-mp" name="pago" value="Mercado Pago" required />
-                <label for="pago-mp">
-                  <i class="fab fa-cc-paypal"></i>
-                  <span>Mercado Pago</span>
-                </label>
-              </div>
-
               <div class="pago-opcion" onclick="seleccionarPago('transferencia')">
                 <input type="radio" id="pago-transf" name="pago" value="Transferencia" required />
                 <label for="pago-transf">
                   <i class="fas fa-university"></i>
                   <span>Transferencia</span>
+                </label>
+              </div>
+
+              <div class="pago-opcion" onclick="seleccionarPago('qr')">
+                <input type="radio" id="pago-qr" name="pago" value="QR" required />
+                <label for="pago-qr">
+                  <i class="fas fa-qrcode"></i>
+                  <span>Pagar con QR</span>
                 </label>
               </div>
             </div>
@@ -290,16 +288,30 @@
                   <p>Arrastra tu archivo aquí o haz clic para seleccionar</p>
                   <small style="color: #999;">PDF, JPG o PNG (máximo 5MB)</small>
                 </div>
-                <input type="file" id="file-comprobante" name="comprobante" accept=".pdf,.jpg,.jpeg,.png" style="display: none;" />
+                <input type="file" id="file-comprobante" name="comprobante" accept=".pdf,.jpg,.jpeg,.png" style="display: none;" onchange="this.files[0] && mostrarArchivoSeleccionado(this.files[0], 'archivo-preview')" />
                 <div id="archivo-preview"></div>
               </div>
             </div>
 
-            <!-- Sección: Mercado Pago -->
-            <div id="seccion-mercado-pago" class="seccion-opcional">
-              <p style="color: #666; margin-bottom: 20px;">Serás redirigido a Mercado Pago para completar el pago de forma segura.</p>
-              <div style="background: #f8f9ff; padding: 15px; border-radius: 6px; border-left: 4px solid #667eea;">
-                <i class="fas fa-lock"></i> Tu pago es 100% seguro con Mercado Pago
+            <!-- Sección: QR -->
+            <div id="seccion-qr" class="seccion-opcional">
+              <h4 style="margin-bottom: 15px;">Escanea el código QR para pagar</h4>
+              <div style="background: white; border: 1px solid #e0e0e0; padding: 20px; border-radius: 6px; margin-bottom: 20px; text-align: center;">
+                <img src="img/qr-pago.jpg" alt="Código QR de pago" style="max-width: 250px; width: 100%; margin-bottom: 20px; border: 2px solid #ddd; padding: 10px;" />
+                <p style="color: #666; margin-bottom: 10px;"><strong>Monto a pagar:</strong></p>
+                <p style="font-size: 24px; color: #27ae60; font-weight: bold;" id="qr-monto">$0</p>
+              </div>
+              <p style="color: #999; font-size: 14px; margin-bottom: 20px; text-align: center;">Abre tu billetera digital (PayPal, Mercado Pago, etc), escanea el código QR e ingresa el monto indicado arriba.</p>
+
+              <div class="form-group">
+                <label for="comprobante-qr">Sube el comprobante del pago realizado:</label>
+                <div class="upload-container" onclick="document.getElementById('file-comprobante-qr').click()">
+                  <i class="fas fa-cloud-upload-alt"></i>
+                  <p>Arrastra tu archivo aquí o haz clic para seleccionar</p>
+                  <small style="color: #999;">PDF, JPG o PNG (máximo 5MB)</small>
+                </div>
+                <input type="file" id="file-comprobante-qr" name="comprobanteQR" accept=".pdf,.jpg,.jpeg,.png" style="display: none;" onchange="this.files[0] && mostrarArchivoSeleccionado(this.files[0], 'archivo-preview-qr')" />
+                <div id="archivo-preview-qr"></div>
               </div>
             </div>
           </div>
